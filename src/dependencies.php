@@ -10,8 +10,8 @@ use Monolog\Handler\StreamHandler;
 // use Slim\Flash\Messages;
 use Slim\Csrf\Guard;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../');
-$dotenv->load();
+// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../');
+// $dotenv->load();
 
 $container = new Container();
 

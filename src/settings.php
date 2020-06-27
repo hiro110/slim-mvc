@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
-$dotenv = Dotenv\Dotenv::create(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../');
 $dotenv->load();
