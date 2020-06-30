@@ -1,5 +1,9 @@
 <?php
-use Slim\MVC\controllers\SampleController;
+use Slim\MVC\controllers\AdminController;
+use Slim\Routing\RouteCollectorProxy;
 
-$app->map(["GET","POST"], "/", SampleController::class.":mapIndex");
-$app->map(['GET','POST'], '/hello', SampleController::class.':mapHello');
+$app->group('/admin', function (RouteCollectorProxy $group){
+  $group->map(["GET"], "[/]", AdminController::class.":getIndex");
+  $group->map(['GET','POST'], '/login', AdminController::class.':mapLogin');
+  $group->map(['GET','POST'], '/logout', AdminController::class.':mapLogout');
+});

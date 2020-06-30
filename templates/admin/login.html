@@ -1,0 +1,11 @@
+{% extends 'admin/base.html' %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<form>
+  <input type="text" name="username" placeholder="Username">
+  <input type="password" name="password" placeholder="Password">
+  <input type="hidden" name="csrf_name" value="{{ csrf_name }}">
+  <input type="hidden" name="csrf_value" value="{{ csrf_value }}">
+  <input type="submit" value="Submit">
+</form>
+{% endblock %}

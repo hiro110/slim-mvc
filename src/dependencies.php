@@ -38,23 +38,23 @@ $container->set('guard',
     }
 );
 
-// $container->set('db',
-//     function() {
-//         $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=UTF8';
-//         $db_user = getenv('DB_USER');
-//         $db_pass = getenv('DB_PASSWORD');
+$container->set('db',
+    function() {
+        $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=UTF8';
+        $db_user = getenv('DB_USER');
+        $db_pass = getenv('DB_PASSWORD');
 
-//         try {
-//             $pdo = new PDO($dsn, $db_user, $db_pass, $driver_options);
-//             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//             $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-//             $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//         } catch (PDOException $e) {
-//             exit('Database connection failed。' . $e->getMessage());
-//         }
+        try {
+            $pdo = new PDO($dsn, $db_user, $db_pass, $driver_options);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            exit('Database connection failed。' . $e->getMessage());
+        }
 
-//         return $pdo;
-//     }
-// );
+        return $pdo;
+    }
+);
 
 AppFactory::setContainer($container);
