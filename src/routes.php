@@ -15,5 +15,5 @@ $app->group('/form', function (RouteCollectorProxy $group){
 $app->map(["GET"], "/admin[/]", AdminController::class.":getIndex")->add(new middlewares\LoggedInCheck($container));
 $app->group('/admin', function (RouteCollectorProxy $group){
   $group->map(['GET','POST'], '/login', AdminController::class.':mapLogin');
-  $group->map(['GET','POST'], '/logout', AdminController::class.':mapLogout');
+  $group->get('/logout', AdminController::class.':getLogout');
 });

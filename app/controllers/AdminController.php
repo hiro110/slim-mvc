@@ -67,5 +67,14 @@ class AdminController
 			}
 
 			return $response->withHeader('Location', '/admin')->withStatus(302);
-    }
+		}
+
+		public function getLogout(Request $request, Response $response, array $args): Response
+    {
+				if (array_key_exists('user', $_SESSION)) {
+            unset($_SESSION['user']);
+        }
+        session_destroy();
+				return $response->withHeader('Location', '/admin/login')->withStatus(302);
+		}
 }
