@@ -13,11 +13,12 @@ class UserDAO
     $this->db = $db;
   }
 
-  public function findByPk(int $id): ?User
+  public function findByPk(int $id, int $is_active = 1): ?User
   {
-    $sql = "select * from users where id = :id";
+    $sql = "select * from users where id = :id and is_active = :is_active";
     $stmt = $this->db->prepare($sql);
     $stmt->bindValue(":id", $id, PDO::PARAM_INT);
+    $stmt->bindValue(":is_active", $is_active, PDO::PARAM_INT);
     $res = $stmt->execute();
 
     if ($res && $row = $stmt->fetch()) {

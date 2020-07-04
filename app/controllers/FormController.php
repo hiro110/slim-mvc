@@ -13,11 +13,11 @@ class FormController
 {
 		private $container;
 
-	// コンストラクタ
-	public function __construct(ContainerInterface $container)
-	{
-			$this->container = $container;
-	}
+		// コンストラクタ
+		public function __construct(ContainerInterface $container)
+		{
+				$this->container = $container;
+		}
 
     public function getIndex(Request $request, Response $response, array $args): Response
     {
