@@ -9,7 +9,7 @@ use Psr\Container\ContainerInterface;
 
 use App\daos\UserDAO;
 
-class LoggedInCheck implements MiddlewareInterface
+class LoggedInCheckMiddleware implements MiddlewareInterface
 {
     private $container;
 
