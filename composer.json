@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Slim\\MVC\\": "app/"
+            "CamtemSlim\\MVC\\": "app/"
         }
     },
     "require-dev": {
