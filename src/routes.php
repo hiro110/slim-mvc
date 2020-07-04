@@ -1,7 +1,7 @@
 <?php
-use CamtemSlim\MVC\controllers\FormController;
-use CamtemSlim\MVC\controllers\AdminController;
-use CamtemSlim\MVC\middlewares;
+use App\controllers\FormController;
+use App\controllers\AdminController;
+use App\middlewares;
 use Slim\Routing\RouteCollectorProxy;
 
 $app->get('/', FormController::class.":getIndex");
