@@ -9,7 +9,6 @@ use Psr\Container\ContainerInterface;
 
 use CamtemSlim\MVC\daos\UserDAO;
 
-// class LoggedInCheckMiddleware implements MiddlewareInterface
 class LoggedInCheck implements MiddlewareInterface
 {
     private $container;
