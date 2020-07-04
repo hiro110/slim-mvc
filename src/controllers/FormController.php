@@ -1,13 +1,13 @@
 <?php
-namespace CamtemSlim\MVC\controllers;
+namespace App\controllers;
 
 use PDO;
 use PDOException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
-use CamtemSlim\MVC\entities;
-use CamtemSlim\MVC\daos;
+use App\entities;
+use App\daos;
 
 class FormController
 {

@@ -1,5 +1,5 @@
 <?php
-namespace CamtemSlim\MVC\middlewares;
+namespace App\middlewares;
 
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -7,7 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 
-use CamtemSlim\MVC\daos\UserDAO;
+use App\daos\UserDAO;
 
 class SampleMiddleware
 {

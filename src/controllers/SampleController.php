@@ -1,5 +1,5 @@
 <?php
-namespace CamtemSlim\MVC\controllers;
+namespace App\controllers;
 
 use PDO;
 use PDOException;
