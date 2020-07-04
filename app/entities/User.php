@@ -1,5 +1,5 @@
 <?php
-namespace Slim\MVC\entities;
+namespace CamtemSlim\MVC\entities;
 
 class User
 {

@@ -1,8 +1,8 @@
 <?php
-namespace Slim\MVC\daos;
+namespace CamtemSlim\MVC\daos;
 
 use PDO;
-namespace Slim\MVC\entities\User;
+namespace CamtemSlim\MVC\entities\User;
 
 class UserDAO
 {
