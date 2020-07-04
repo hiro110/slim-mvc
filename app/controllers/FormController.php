@@ -24,5 +24,19 @@ class FormController
 			$view = $this->container->get("view");
 			$response = $view->render($response, "form/index.html");
 			return $response;
+		}
+
+		public function getConfirm(Request $request, Response $response, array $args): Response
+    {
+			$view = $this->container->get("view");
+			$response = $view->render($response, "form/index.html");
+			return $response;
+		}
+
+		public function getComplete(Request $request, Response $response, array $args): Response
+    {
+			$view = $this->container->get("view");
+			$response = $view->render($response, "form/index.html");
+			return $response;
     }
 }
