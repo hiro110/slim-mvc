@@ -51,10 +51,10 @@ class AdminController
 				try {
 						$db = $this->container->get("db");
 						$userDao = new UserDAO($db);
-						$res = $userDao->findByUser($username, $password);
+						$user = $userDao->findByUser($username, $password);
 
-						if (!$res['result']) {
-								$response = $view->render($response, "admin/login.html",['msg' => $res['msg']]);
+						if (!$user['result']) {
+								$response = $view->render($response, "admin/login.html",['msg' => $user['msg']]);
 								return $response;
 						}
 
@@ -80,18 +80,22 @@ class AdminController
 
 		public function mapUsers(Request $request, Response $response, array $args): Response
 		{
+				$view = $this->container->get("view");
 				if($request->getMethod() == "GET") {
+						$db = $this->container->get("db");
+						$userDao = new UserDAO($db);
+						$users = $userDao->findAllUsers();
 
-						$response = $view->render($response, "admin/users/index.html");
+						$response = $view->render($response, "admin/users/index.html",['users' => $users]);
 						return $response;
 				}
 		}
 
 		public function mapUsersId(Request $request, Response $response, array $args): Response
 		{
+				$view = $this->container->get("view");
 				switch ($request->getMethod()) {
 						case 'GET':
-							# code...
 							break;
 
 						case 'POST':
