@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use CamtemSlim\MVC\entities;
-use CamtemSlim\MVC\daos;
+use CamtemSlim\MVC\daos\UserDAO;
 
 class AdminController
 {
@@ -50,27 +50,14 @@ class AdminController
 
 			try {
 				$db = $this->container->get("db");
-				// $userDao = new UserDAO($db);
-				// $res = $userDao->findByUser($username, $password);
-				$sql="select * from users where username = :username and is_active = :is_active";
-				$stmt = $db->prepare($sql);
-				$stmt->bindValue(":username", $username, PDO::PARAM_STR);
-				$stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
-				$res = $stmt->execute();
+				$userDao = new UserDAO($db);
+				$res = $userDao->findByUser($username, $password);
 
-				if ($res && $row = $stmt->fetch()) {
-					if (!password_verify($password, $row["password"])) {
-						$msg = "invalid username or password";
-						$response = $view->render($response, "admin/login.html",['msg' => $msg]);
-						return $response;
-					}
+				if (!$res['result']) {
+					$response = $view->render($response, "admin/login.html",['msg' => $res['msg']]);
+					return $response;
+				}
 
-					$_SESSION['user'] = [
-						'id' => $row["id"],
-						'username' => $row["username"],
-						'role' => $row["role"]
-					];
-    		}
 			}
 			catch(PDOException $ex) {
 				var_dump($ex->getMessage());
