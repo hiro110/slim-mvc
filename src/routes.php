@@ -1,7 +1,7 @@
 <?php
-use App\controllers\FormController;
-use App\controllers\AdminController;
-use App\middlewares;
+use App\Controllers\FormController;
+use App\Controllers\AdminController;
+use App\Middlewares;
 use Slim\Routing\RouteCollectorProxy;
 
 use Psr\Container\ContainerInterface;

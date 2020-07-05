@@ -2,7 +2,7 @@
 namespace App\daos;
 
 use PDO;
-use App\entities\User;
+use App\Entities\User;
 
 class UserDAO
 {
