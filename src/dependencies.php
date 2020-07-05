@@ -18,6 +18,8 @@ $container = new Container();
 $container->set('view',
     function() {
         $twig = Twig::create(__DIR__ . '/../templates');
+        $env = $twig->getEnvironment();
+        $env->addGlobal('session', $_SESSION);
         return $twig;
     }
 );

@@ -16,7 +16,8 @@ $app->group('/form', function (RouteCollectorProxy $group){
 });
 
 $app->map(["GET"], "/admin[/]", AuthController::class.":getIndex")->add(new Middlewares\LoggedInCheckMiddleware($container));
-$app->map(["GET", "POST"],"/admin/users", UserManageController::class.":mapUsers")->add(new Middlewares\LoggedInCheckMiddleware($container));
+$app->get("/admin/users", UserManageController::class.":getUsers")->add(new Middlewares\LoggedInCheckMiddleware($container));
+$app->map(["GET", "POST"],"/admin/users/add", UserManageController::class.":mapUsersAdd")->add(new Middlewares\LoggedInCheckMiddleware($container));
 $app->map(["GET", "POST", "PUT", "DELETE"], "/admin/users/{:id}", UserManageController::class.":mapUsersId")->add(new Middlewares\LoggedInCheckMiddleware($container));
 
 

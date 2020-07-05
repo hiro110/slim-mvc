@@ -73,25 +73,40 @@ class UserDAO
 
     public function findAllUsers(): array
     {
-        $sql = "select * from users where is_active = :is_active";
+        $sql = "select * from users where is_active = :is_active order by id asc";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
         $res = $stmt->execute();
 
         $users = [];
-        if ($res && $row = $stmt->fetch()) {
-            $id = intVal($row["id"]);
-            $username = $row["username"];
-            $role = intVal($row["role"]);
+        if ($res) {
+            while ($row = $stmt->fetch()) {
+                $id = intVal($row["id"]);
+                $username = $row["username"];
+                $role = intVal($row["role"]);
 
-            $user = new User();
-            $user->setId($id);
-            $user->setUsername($username);
-            $user->setRole($role);
+                $user = new User();
+                $user->setId($id);
+                $user->setUsername($username);
+                $user->setRole($role);
 
-            $users[$id] = $user;
+                $users[$id] = $user;
+            }
         }
 
         return $users;
+    }
+
+    public function addUser(string $username, string $password, int $role): bool
+    {
+        $sql = "insert into users (username, password, role, is_active) VALUES (:username, :password, :role, :is_active)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
+        $stmt->bindValue(":role", $role, PDO::PARAM_INT);
+        $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
+        $res = $stmt->execute();
+
+        return $res;
     }
 }
