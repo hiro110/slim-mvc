@@ -1,5 +1,5 @@
 <?php
-namespace App\daos;
+namespace App\Daos;
 
 use PDO;
 use App\Entities\User;
