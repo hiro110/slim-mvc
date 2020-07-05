@@ -1,6 +1,7 @@
 <?php
 use App\Controllers\FormController;
-use App\Controllers\AdminController;
+use App\Controllers\Admin\AuthController;
+use App\Controllers\Admin\User\UserManageController;
 use App\Middlewares;
 use Slim\Routing\RouteCollectorProxy;
 
@@ -14,13 +15,13 @@ $app->group('/form', function (RouteCollectorProxy $group){
   $group->map(["GET","POST"],'/complete', FormController::class.":getComplete");
 });
 
-$app->map(["GET"], "/admin[/]", AdminController::class.":getIndex")->add(new middlewares\LoggedInCheckMiddleware($container));
-$app->map(["GET", "POST"],"/admin/users", AdminController::class.":mapUsers")->add(new middlewares\LoggedInCheckMiddleware($container));
-$app->map(["GET", "POST", "PUT", "DELETE"], "/admin/users/{:id}", AdminController::class.":mapUsersId")->add(new middlewares\LoggedInCheckMiddleware($container));
+$app->map(["GET"], "/admin[/]", AuthController::class.":getIndex")->add(new Middlewares\LoggedInCheckMiddleware($container));
+$app->map(["GET", "POST"],"/admin/users", UserManageController::class.":mapUsers")->add(new Middlewares\LoggedInCheckMiddleware($container));
+$app->map(["GET", "POST", "PUT", "DELETE"], "/admin/users/{:id}", UserManageController::class.":mapUsersId")->add(new Middlewares\LoggedInCheckMiddleware($container));
 
 
-$app->map(['GET','POST'], '/admin/login', AdminController::class.':mapLogin');
-$app->get( '/admin/logout', AdminController::class.':getLogout');
+$app->map(['GET','POST'], '/admin/login', AuthController::class.':mapLogin');
+$app->get( '/admin/logout', AuthController::class.':getLogout');
 
 
 // $app->group('/admin', function (RouteCollectorProxy $group, ContainerInterface $container){
