@@ -8,7 +8,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use App\Entities;
-use App\daos\UserDAO;
+use App\Daos\UserDAO;
 
 class AdminController
 {

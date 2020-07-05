@@ -7,7 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 
-use App\daos\UserDAO;
+use App\Daos\UserDAO;
 
 class SampleMiddleware
 {
