@@ -4,12 +4,12 @@
 
 <form method="POST">
   {% if msg %}{{ msg }}{% endif %}
-  <input type="text" name="username" placeholder="Username">
+  <input type="text" name="username" placeholder="username" value="{% if user.username%}{{ user.username }}{% endif %}">
   <input type="password" name="password" placeholder="Password">
   <select name="role">
-    <option value="0">システム管理者</option>
-    <option value="1">一般</option>
-    <option value="2">閲覧</option>
+    {% for key, value in roles %}
+      <option value="{{ key }}" {% if user.role == key %}selected{% endif %}>{{ value }}</option>
+    {% endfor %}
   </select>
   <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
   <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->

@@ -8,6 +8,8 @@ class UserDAO
 {
     private $db;
 
+    public const ROLES = ['システム管理者', '一般', '閲覧'];
+
     public function __construct(PDO $db)
     {
         $this->db = $db;
@@ -23,18 +25,18 @@ class UserDAO
 
         $user = new User();
         if ($res && $row = $stmt->fetch()) {
-            $id = intVal($row["id"]);
+            // $id = intVal($row["id"]);
             $username = $row["username"];
-            $password = $row["password"];
+            // $password = $row["password"];
             $role = intVal($row["role"]);
-            $is_active = ($row["is_active"] == "1");
+            // $is_active = ($row["is_active"] == "1");
 
-            // $user = new User();
-            $user->setId($id);
+            $user = new User();
+            // $user->setId($id);
             $user->setUsername($username);
-            $user->setPassword($password);
+            // $user->setPassword($password);
             $user->setRole($role);
-            $user->setIsActive($is_active);
+            // $user->setIsActive($is_active);
         }
 
         return $user;
@@ -46,6 +48,7 @@ class UserDAO
             "result" => true,
             "msg" => ""
         ];
+
         $sql="select * from users where username = :username and is_active = :is_active";
         $stmt = $this->db->prepare($sql);
         $stmt->bindValue(":username", $username, PDO::PARAM_STR);
@@ -59,13 +62,13 @@ class UserDAO
                     "msg" => "invalid username or password"
                   ];
                   return $result;
-                }
+            }
 
-                $_SESSION['user'] = [
-                  'id' => $row["id"],
-                  'username' => $row["username"],
-                  'role' => $row["role"]
-                ];
+            $_SESSION['user'] = [
+                'id' => $row["id"],
+                'username' => $row["username"],
+                'role' => $row["role"]
+            ];
         }
 
         return $result;
@@ -105,6 +108,39 @@ class UserDAO
         $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
         $stmt->bindValue(":role", $role, PDO::PARAM_INT);
         $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
+        $res = $stmt->execute();
+
+        return $res;
+    }
+
+    public function updateUser(int $id, string $username, string $password, int $role): bool
+    {
+        $set_sql ="";
+
+        if ($username != '') {
+            $set_sql = "username = :username";
+        }
+        if ($password != '') {
+             $set_sql .= ",password = :password";
+        }
+
+        $set_sql = ltrim($set_sql, ',');
+        $sql = sprintf("update users set %s, role = :role, updated_at = :updated_at where id = :id", $set_sql);
+
+        // $sql = "update users set (username = :username, password = :password, role = :role, updated_at = :updated_at) where id = :id";
+        $stmt = $this->db->prepare($sql);
+
+        if ($username != '') {
+            $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        }
+        if ($password != '') {
+            $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
+        }
+        // $stmt->bindValue(":username", $username, PDO::PARAM_STR);
+        // $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
+        $stmt->bindValue(":role", $role, PDO::PARAM_INT);
+        $stmt->bindValue(":updated_at", date('Y-m-d H:i:s'), PDO::PARAM_STR);
+        $stmt->bindValue(":id", $id, PDO::PARAM_INT);
         $res = $stmt->execute();
 
         return $res;

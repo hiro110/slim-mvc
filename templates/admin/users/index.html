@@ -6,11 +6,13 @@
   <th>id</th>
   <th>username</th>
   <th>role</th>
+  <th>edit</th>
   {% for user in users %}
   <tr>
-    <td>{{ user.id}}</td>
+    <td>{{ user.id }}</td>
     <td>{{ user.username }}</td>
     <td>{{ user.role }}</td>
+    <td><a href="/admin/users/{{ user.id }}" alt="edit">編集</a></td>
   </tr>
   {% endfor %}
 </table>
