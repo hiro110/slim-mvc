@@ -6,8 +6,8 @@ use PDOException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
-use App\Entities;
-use App\Daos;
+use App\Entities\Admin;
+use App\Daos\Admin;
 
 class FormController
 {

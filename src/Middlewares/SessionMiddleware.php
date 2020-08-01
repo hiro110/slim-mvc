@@ -7,7 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 
-use App\Daos\UserDAO;
+use App\Daos\Admin\UserDAO;
 
 class SessionMiddleware implements MiddlewareInterface
 {
