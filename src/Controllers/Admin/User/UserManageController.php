@@ -74,7 +74,7 @@ class UserManageController
 						var_dump($ex->getMessage());
 				} finally {
 						// DB切断。
-						$db = null;
+						$this->db = null;
 				}
 
 				$response = $this->view->render($response, "admin/users/edit.html",['msg' => $msg]);
@@ -129,7 +129,7 @@ class UserManageController
 						var_dump($ex->getMessage());
 				} finally {
 						// DB切断。
-						$db = null;
+						$this->db = null;
 				}
 
 				$response = $this->view->render($response, "admin/users/edit.html",

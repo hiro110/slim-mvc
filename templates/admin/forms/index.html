@@ -4,12 +4,14 @@
 
 <table border="2" cellpadding="6" cellspacing="5">
   <th>id</th>
-  <th>address</th>
+  <th>name</th>
+  <th>uri</th>
   <th>edit</th>
   {% for form in forms %}
   <tr>
-    <td>{{ forms.id }}</td>
-    <td>{{ forms.address }}</td>
+    <td>{{ form.id }}</td>
+    <td>{{ form.name }}</td>
+    <td>{{ form.base_uri }}</td>
     <td><a href="/admin/forms/{{ user.id }}" alt="edit">編集</a></td>
   </tr>
   {% endfor %}

@@ -28,7 +28,6 @@ class UserDAO
             $username = $row["username"];
             $role = intVal($row["role"]);
 
-            $user = new User();
             $user->setUsername($username);
             $user->setRole($role);
         }

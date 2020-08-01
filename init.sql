@@ -37,7 +37,7 @@ drop table form_groups;
 CREATE TABLE `form_groups` (
   `id` int AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
-  `uri_path` varchar(255) NOT NULL UNIQUE,
+  `base_uri` varchar(255) NOT NULL UNIQUE,
   `is_active` tinyint NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -50,19 +50,25 @@ CREATE TABLE `form_groups` (
   * form_group_id:フォームNp
   * label_name:フォームのラベル
   * schema_name:form_valuesのカラム名に利用
-  * input_type:フォームのinput_typeに利用
+  * input_type:フォームのinput_typeに利用 ex) 1=text, 2=number, 3=tel, 4=email, 5=password, 7=radio, 8=checkbox 9= date
   * is_required:必須項目フラグ
+  * choice_value:選択肢が必要な場合に選択項目を入力（radio, checkbox, select）
+  * validate:バリデーション
+    正規表現はこちら
+  https://qiita.com/fubarworld2/items/9da655df4d6d69750c06
+  ex) email /^\S+@\S+\.\S+$/
 */
 
 drop table form_items;
 CREATE TABLE `form_items` (
   `id` int AUTO_INCREMENT,
   `form_group_id` int NOT NULL,
-  `label_name` varchar(255) NOT NULL,
-  `schema_name` varchar(255) NOT NULL,
+  `label_name` varchar(255) NOT NULL DEFAULT '',
+  `schema_name` varchar(255) NOT NULL DEFAULT '',
   `input_type` int NOT NULL DEFAULT 0,
   `is_required` boolean NOT NULL DEFAULT false,
-  `choice_value` varchar(255),
+  `choice_value` text NOT NULL,
+  `validate` text NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id)
@@ -77,14 +83,14 @@ CREATE TABLE `form_items` (
   https://qiita.com/fubarworld2/items/9da655df4d6d69750c06
 */
 
-drop table `item_details`;
-CREATE TABLE `item_details` (
-  `id` int AUTO_INCREMENT,
-  `input_type_id` int NOT NULL DEFAULT 0,
-  `type` int  NOT NULL DEFAULT 0,
-  `validate`
+-- drop table `item_details`;
+-- CREATE TABLE `item_details` (
+--   `id` int AUTO_INCREMENT,
+--   `input_type_id` int NOT NULL DEFAULT 0,
+--   `type` int  NOT NULL DEFAULT 0,
+--   `validate`
 
-);
+-- );
 
 -- INSERT INTO `form_items` (`label_name`, `schema_name`, `input_type`, `type`, `required`, `only_int`, `choice_name`, `choice_value`, `format_with`) VALUES
 -- ('名前', 'name', 'text', 1, false, false, '', '', ''),
