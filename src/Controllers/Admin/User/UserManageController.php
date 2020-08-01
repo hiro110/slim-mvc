@@ -12,33 +12,34 @@ use App\Daos\Admin\UserDAO;
 
 class UserManageController
 {
-		private $container;
+		private $view;
+		private $db;
 
-	// コンストラクタ
 	public function __construct(ContainerInterface $container)
 	{
-				$this->container = $container;
+				$this->view = $container->get("view");
+				$this->db = $container->get("db");
 	}
 
 		public function getUsers(Request $request, Response $response, array $args): Response
 		{
-				$view = $this->container->get("view");
-				$db = $this->container->get("db");
-
-				$userDao = new UserDAO($db);
+				$userDao = new UserDAO($this->db);
 				$users = $userDao->findAllUsers();
 
-				$response = $view->render($response, "admin/users/index.html",['users' => $users, 'session_role' => $_SESSION['user']['role']]);
+				$response = $this->view->render($response,
+											"admin/users/index.html",
+											[
+												'users' => $users,
+												'session_role' => $_SESSION['user']['role']
+											]);
 				return $response;
 
 		}
 
 		public function mapUsersAdd(Request $request, Response $response, array $args): Response
 		{
-				$view = $this->container->get("view");
-
 				if ($request->getMethod() == "GET") {
-						$response = $view->render($response,
+						$response = $this->view->render($response,
 													"admin/users/edit.html",
 													['roles' => UserDAO::ROLES]);
 						return $response;
@@ -52,7 +53,7 @@ class UserManageController
 				$msg = "";
 				if ($username == '' || $password == '') {
 						$msg = "invalid param";
-						$response = $view->render($response,
+						$response = $this->view->render($response,
 													"admin/users/edit.html",
 													[
 															'msg' => $msg,
@@ -62,8 +63,7 @@ class UserManageController
 				}
 
 				try {
-						$db = $this->container->get("db");
-						$userDao = new UserDAO($db);
+						$userDao = new UserDAO($this->db);
 						$res = $userDao->addUser($username, $password, $role);
 
 						if (!$res) {
@@ -77,20 +77,17 @@ class UserManageController
 						$db = null;
 				}
 
-				$response = $view->render($response, "admin/users/edit.html",['msg' => $msg]);
+				$response = $this->view->render($response, "admin/users/edit.html",['msg' => $msg]);
 				return $response;
-
 		}
 
 		public function mapUsersId(Request $request, Response $response, array $args): Response
 		{
-				$view = $this->container->get("view");
 				$user_id = intVal($args['id']);
 				if ($request->getMethod() == "GET") {
 						$msg = "";
 						try {
-								$db = $this->container->get("db");
-								$userDao = new UserDAO($db);
+								$userDao = new UserDAO($this->db);
 								$user = $userDao->findByPk($user_id);
 								// var_dump($user);
 								if (!$user) {
@@ -102,7 +99,7 @@ class UserManageController
 								// DB切断。
 								$db = null;
 						}
-						$response = $view->render($response, "admin/users/edit.html",
+						$response = $this->view->render($response, "admin/users/edit.html",
 										[
 											'user' => $user,
 											'msg' => $msg,
@@ -116,7 +113,6 @@ class UserManageController
 				$username = isset($params["username"]) ? $params["username"]: '';
 				$password = isset($params["password"]) ? $params["password"]: '';
 				$role = isset($params["role"]) ? intVal($params["role"]): 2;
-				var_dump($username);
 
 				$msg = "";
 				if (empty($username)) {
@@ -124,8 +120,7 @@ class UserManageController
 				}
 
 				try {
-						$db = $this->container->get("db");
-						$userDao = new UserDAO($db);
+						$userDao = new UserDAO($this->db);
 						$res = $userDao->updateUser($user_id, $username, $password, $role);
 						if (!$res) {
 								$msg = "Failed update user";
@@ -137,7 +132,7 @@ class UserManageController
 						$db = null;
 				}
 
-				$response = $view->render($response, "admin/users/edit.html",
+				$response = $this->view->render($response, "admin/users/edit.html",
 										[
 											'user' => [
 												'username' => $username,

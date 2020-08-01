@@ -25,18 +25,12 @@ class UserDAO
 
         $user = new User();
         if ($res && $row = $stmt->fetch()) {
-            // $id = intVal($row["id"]);
             $username = $row["username"];
-            // $password = $row["password"];
             $role = intVal($row["role"]);
-            // $is_active = ($row["is_active"] == "1");
 
             $user = new User();
-            // $user->setId($id);
             $user->setUsername($username);
-            // $user->setPassword($password);
             $user->setRole($role);
-            // $user->setIsActive($is_active);
         }
 
         return $user;
@@ -127,17 +121,13 @@ class UserDAO
         $set_sql = ltrim($set_sql, ',');
         $sql = sprintf("update users set %s, role = :role, updated_at = :updated_at where id = :id", $set_sql);
 
-        // $sql = "update users set (username = :username, password = :password, role = :role, updated_at = :updated_at) where id = :id";
         $stmt = $this->db->prepare($sql);
-
         if ($username != '') {
             $stmt->bindValue(":username", $username, PDO::PARAM_STR);
         }
         if ($password != '') {
             $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
         }
-        // $stmt->bindValue(":username", $username, PDO::PARAM_STR);
-        // $stmt->bindValue(":password", password_hash($password, PASSWORD_DEFAULT), PDO::PARAM_STR);
         $stmt->bindValue(":role", $role, PDO::PARAM_INT);
         $stmt->bindValue(":updated_at", date('Y-m-d H:i:s'), PDO::PARAM_STR);
         $stmt->bindValue(":id", $id, PDO::PARAM_INT);

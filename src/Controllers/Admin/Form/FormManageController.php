@@ -8,7 +8,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use App\Entities\Admin;
-// use App\Daos\Admin\UserDAO;
 use App\Daos\Admin\FormDAO;
 
 class FormManageController
