@@ -22,9 +22,9 @@ $app->get("/admin/users", UserManageController::class.":getUsers")->add(new Logg
 $app->map(["GET", "POST"],"/admin/users/add", UserManageController::class.":mapUsersAdd")->add(new LoggedInCheckMiddleware($container));
 $app->map(["GET", "POST"], "/admin/users/{id}", UserManageController::class.":mapUsersId")->add(new LoggedInCheckMiddleware($container));
 
-$app->get("/admin/forms", UserManageController::class.":getForms")->add(new LoggedInCheckMiddleware($container));
-$app->map(["GET", "POST"],"/admin/forms/add", UserManageController::class.":mapFormssAdd")->add(new LoggedInCheckMiddleware($container));
-$app->map(["GET", "POST"], "/admin/forms/{id}", UserManageController::class.":mapFormsId")->add(new LoggedInCheckMiddleware($container));
+$app->get("/admin/forms", FormManageController::class.":getForms")->add(new LoggedInCheckMiddleware($container));
+$app->map(["GET", "POST"],"/admin/forms/add", FormManageController::class.":mapFormssAdd")->add(new LoggedInCheckMiddleware($container));
+$app->map(["GET", "POST"], "/admin/forms/{id}", FormManageController::class.":mapFormsId")->add(new LoggedInCheckMiddleware($container));
 
 $app->map(['GET','POST'], '/admin/login', AuthController::class.':mapLogin');
 $app->get( '/admin/logout', AuthController::class.':getLogout');

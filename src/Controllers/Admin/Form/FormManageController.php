@@ -1,5 +1,5 @@
 <?php
-namespace App\Controllers\Admin\User;
+namespace App\Controllers\Admin\Form;
 
 use PDO;
 use PDOException;
@@ -8,30 +8,32 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use App\Entities\Admin;
-use App\Daos\Admin\UserDAO;
+// use App\Daos\Admin\UserDAO;
+use App\Daos\Admin\FormDAO;
 
 class FormManageController
 {
-		private $container;
+		private $view;
+		private $db;
 
 	// コンストラクタ
 	public function __construct(ContainerInterface $container)
 	{
-				$this->container = $container;
+				$this->view = $container->get("view");
+				$this->db = $container->get("db");
 	}
 
 		public function getforms(Request $request, Response $response, array $args): Response
 		{
-
-				$response = $view->render($response, "admin/forms/index.html",['forms' => $forms, 'session_role' => $_SESSION['user']['role']]);
+				$forms = "";
+				$response = $this->view->render($response, "admin/forms/index.html");
 				return $response;
-
 		}
 
 		public function mapformsAdd(Request $request, Response $response, array $args): Response
 		{
 
-				$response = $view->render($response, "admin/forms/edit.html",['msg' => $msg]);
+				$response = $this->view->render($response, "admin/forms/edit.html",['msg' => $msg]);
 				return $response;
 
 		}
@@ -39,7 +41,7 @@ class FormManageController
 		public function mapformsId(Request $request, Response $response, array $args): Response
 		{
 
-				$response = $view->render($response, "admin/forms/edit.html",
+				$response = $this->view->render($response, "admin/forms/edit.html",
 										[
 											'user' => [
 												'username' => $username,
