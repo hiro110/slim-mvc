@@ -27,7 +27,6 @@ class FormManageController
 				try {
 						$formDao = new FormDAO($this->db);
 						$forms = $formDao->findAllForms();
-						var_dump($forms);
 
 						if (!$forms) {
 								$msg = "Failed add form";
@@ -38,7 +37,7 @@ class FormManageController
 						// DB切断。
 						$this->db = null;
 				}
-
+				var_dump($forms);
 				$response = $this->view->render($response,
 											"admin/forms/index.html",
 										[
@@ -73,9 +72,6 @@ class FormManageController
 					'validate' => isset($params["validate"]) ? $params["validate"]: '',
 				];
 
-				// var_dump($form_group);
-				// var_dump($form_item);
-
 				try {
 						$formDao = new FormDAO($this->db);
 						$forms = $formDao->addForm($form_group, $form_item);
@@ -97,17 +93,50 @@ class FormManageController
 
 		public function mapformsId(Request $request, Response $response, array $args): Response
 		{
+				$fg_id = intVal($args['id']);
+				if ($request->getMethod() == "GET") {
+						$msg = "";
+						try {
+								$formDao = new FormDAO($this->db);
 
-				$response = $this->view->render($response, "admin/forms/edit.html",
-										[
-											'user' => [
-												'username' => $username,
-												'role' => $role,
-											],
-											'msg' => $msg,
-											'roles' => UserDAO::ROLES
-										]);
-				return $response;
+								$group = $formDao->findGroupByPk($fg_id);
+								if (!$group) {
+									$msg = "Not found form";
+								}
+
+								$items = $formDao->findItemByGid($fg_id);
+								if (!$items) {
+									$msg = "Not found form items";
+								}
+
+						} catch(PDOException $ex) {
+								var_dump($ex->getMessage());
+						} finally {
+								// DB切断。
+								$this->db = null;
+						}
+
+						$response = $this->view->render($response,
+													"admin/forms/edit.html",
+													[
+															'form_group' => $group,
+															'form_items' => $items,
+															'msg' => $msg,
+															'itemtypes' => FormDAO::ITEM_TYPE
+													]);
+						return $response;
+				}
+
+				// $response = $this->view->render($response, "admin/forms/edit.html",
+				// 						[
+				// 							'user' => [
+				// 								'username' => $username,
+				// 								'role' => $role,
+				// 							],
+				// 							'msg' => $msg,
+				// 							'roles' => UserDAO::ROLES
+				// 						]);
+				// return $response;
 		}
 
 }

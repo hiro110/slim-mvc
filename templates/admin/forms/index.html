@@ -12,10 +12,12 @@
     <td>{{ form.id }}</td>
     <td>{{ form.name }}</td>
     <td>{{ form.base_uri }}</td>
-    <td><a href="/admin/forms/{{ user.id }}" alt="edit">編集</a></td>
+    <td><a href="/admin/forms/{{ form.id }}" alt="edit">編集</a></td>
   </tr>
   {% endfor %}
 </table>
+
+
 
 {% if session.user.role == 0 %}
 <a href="/admin/forms/add" alt="logout">新規作成</a>

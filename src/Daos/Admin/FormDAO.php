@@ -27,7 +27,7 @@ class FormDAO
         $this->db = $db;
     }
 
-    public function findByPk(int $id, int $is_active = 1): ?User
+    public function findGroupByPk(int $id, int $is_active = 1): ?FormGroup
     {
         $sql = "select * from form_groups where id = :id and is_active = :is_active";
         $stmt = $this->db->prepare($sql);
@@ -37,17 +37,53 @@ class FormDAO
 
         $fg = new FormGroup();
         if ($res && $row = $stmt->fetch()) {
+            // $id = $intVal(row["id"]);
             $name = $row["name"];
-            $base_uri = $row["base_uri"];
+            $basesuri = $row["base_uri"];
 
-            $fg->setUsername($name);
-            $fg->setRole($base_uri);
+            // $fg->setId($id);
+            $fg->setName($name);
+            $fg->setBaseUri($baseuri);
         }
 
         return $fg;
     }
 
-    public function findAllForms(): array
+    public function findItemByGid(int $gid): array
+    {
+        $sql = "select * from form_items where form_group_id = :form_group_id";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":form_group_id", $gid, PDO::PARAM_INT);
+        $res = $stmt->execute();
+
+        $items = [];
+        if ($res) {
+            while ($row = $stmt->fetch()) {
+                $id = intVal($row["id"]);
+                $labelname = $row["label_name"];
+                $schemaname = $row["schema_name"];
+                $inputtype = intVal($row["input_type"]);
+                $isrequired = intVal($row["is_required"]) == 1;
+                $choicevalue = $row["choice_value"];
+                $validate = $row["validate"];
+
+                $fi = new FormItem();
+                $fi->setId($id);
+                $fi->setLabelName($labelname);
+                $fi->setSchemaName($schemaname);
+                $fi->setInputType($inputtype);
+                $fi->setIsRequired($isrequired);
+                $fi->setChoiceValue($choicevalue);
+                $fi->setValidate($validate);
+
+                $items[$id] = $fi;
+            }
+        }
+
+        return $items;
+    }
+
+    public function findAllForms(): ?array
     {
         $sql = "select * from form_groups where is_active = :is_active order by id asc";
         $stmt = $this->db->prepare($sql);

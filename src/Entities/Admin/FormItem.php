@@ -1,15 +1,15 @@
 <?php
 namespace App\Entities\Admin;
 
-class FormGroup
+class FormItem
 {
   private $id;
-  private $form_group_id;
-  private $label_name;
-  private $schema_name;
-  private $input_type;
-  private $is_required;
-  private $choice_value;
+  private $formgroupid;
+  private $labelname;
+  private $schemaname;
+  private $inputtype;
+  private $isrequired;
+  private $choicevalue;
   private $validate;
 
   // id
@@ -25,66 +25,66 @@ class FormGroup
   // form group id
   public function getFormGroupId(): ?id
   {
-    return $this->form_group_id;
+    return $this->formgroupid;
   }
 
-  public function setFormGroupId(?int $form_group_id): void
+  public function setFormGroupId(?int $formgroupid): void
   {
-    $this->form_group_id = $form_group_id;
+    $this->formgroupid = $formgroupid;
   }
 
   //  label name
   public function getLabelName(): ?string
   {
-    return $this->label_name;
+    return $this->labelname;
   }
 
-  public function setLabelName(?string $label_name): void
+  public function setLabelName(?string $labelname): void
   {
-    $this->label_name = $label_name;
+    $this->labelname = $labelname;
   }
 
   // schema name
   public function getSchemaName(): ?string
   {
-    return $this->schema_name;
+    return $this->schemaname;
   }
 
-  public function setSchemaName(?string $schema_name): void
+  public function setSchemaName(?string $schemaname): void
   {
-    $this->schema_name = $schema_name;
+    $this->schemaname = $schemaname;
   }
 
   // input type
   public function getInputType(): ?int
   {
-    return $this->input_type;
+    return $this->inputtype;
   }
 
-  public function setInputType(?int $input_type): void
+  public function setInputType(?int $inputtype): void
   {
-    $this->input_type = $input_type;
+    $this->inputtype = $inputtype;
   }
 
-  // is_required
+  // isrequired
     public function getIsRequired(): ?bool
   {
-    return $this->is_required;
+    return $this->isrequired;
   }
 
-  public function setIsRequired(?bool $is_required): void
+  public function setIsRequired(?bool $isrequired): void
   {
-    $this->is_required = $is_required;
+    $this->isrequired = $isrequired;
   }
 
   // choice value
   public function getChoiceValue(): ?string
   {
-    return $this->choice_value;
+    return $this->choicevalue;
   }
-  public function setChoiceValue(?string $choice_value): void
+  public function setChoiceValue(?string $choicevalue): void
   {
-    $this->choice_value = $choice_value;
+    $this->choicevalue = $choicevalue;
   }
 
   // validate
