@@ -7,9 +7,8 @@
   <div>
     <label for="group_name">フォーム名前</label>
     <input type="text" id="group_name" name="group_name" placeholder="username" required value="{% if form_group.name %}{{ form_group.name }}{% endif %}">
-    <label for="base_uri">フォームURL</label>
-    <input type="text"id="group_base_uri"  name="group_base_uri" placeholder="username"
-      required value="{% if form_group.baseuri %}{{ form_group.baseuri }}{% endif %}">
+    <label for="group_uri">フォームURL</label>
+    <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.uri %}{{ form_group.uri }}{% endif %}">
   </div>
 
   {% for form_item in form_items %}

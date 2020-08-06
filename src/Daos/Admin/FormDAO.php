@@ -39,11 +39,10 @@ class FormDAO
         if ($res && $row = $stmt->fetch()) {
             // $id = $intVal(row["id"]);
             $name = $row["name"];
-            $basesuri = $row["base_uri"];
+            $uri = $row["base_uri"];
 
-            // $fg->setId($id);
             $fg->setName($name);
-            $fg->setBaseUri($baseuri);
+            $fg->setUri($uri);
         }
 
         return $fg;
@@ -95,12 +94,12 @@ class FormDAO
             while ($row = $stmt->fetch()) {
                 $id = intVal($row["id"]);
                 $name = $row["name"];
-                $base_uri = $row["base_uri"];
+                $uri = $row["base_uri"];
 
                 $fg = new FormGroup();
                 $fg->setId($id);
                 $fg->setName($name);
-                $fg->setBaseUri($base_uri);
+                $fg->setUri($uri);
 
                 $forms[$id] = $fg;
             }

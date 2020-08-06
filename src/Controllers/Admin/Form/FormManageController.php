@@ -98,7 +98,6 @@ class FormManageController
 						$msg = "";
 						try {
 								$formDao = new FormDAO($this->db);
-
 								$group = $formDao->findGroupByPk($fg_id);
 								if (!$group) {
 									$msg = "Not found form";

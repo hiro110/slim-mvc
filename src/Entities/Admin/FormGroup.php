@@ -5,7 +5,7 @@ class FormGroup
 {
   private $id;
   private $name;
-  private $baseuri;
+  private $uri;
   private $isactive;
 
   public function getId(): ?int
@@ -28,14 +28,14 @@ class FormGroup
     $this->name = $name;
   }
 
-  public function getBaseUri(): ?string
+  public function getUri(): ?string
   {
-    return $this->baseuri;
+    return $this->uri;
   }
 
-  public function setBaseUri(?string $baseuri): void
+  public function setUri(?string $uri): void
   {
-    $this->baseuri = $baseuri;
+    $this->uri = $uri;
   }
 
     public function getIsActive(): ?bool
