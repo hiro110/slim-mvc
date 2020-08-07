@@ -3,7 +3,6 @@
 {% block content %}
 
 <form method="POST">
-  <!--  -->
   <div>
     <label for="group_name">フォーム名前</label>
     <input type="text" id="group_name" name="group_name" placeholder="username" required value="{% if form_group.name %}{{ form_group.name }}{% endif %}">
@@ -12,7 +11,7 @@
   </div>
 
   {% for form_item in form_items %}
-  <div>
+  <div class="row" data-formno="{{ loop.index0 }}">
     <label for="label_name">表示名</label>
     <input type="text" id="label_name" name="label_name[{{ loop.index0 }}]" placeholder="名前" required value="{{ form_item.labelname }}"><br>
     <label for="schema_name">定義名</label>
@@ -24,17 +23,120 @@
       {% endfor %}
     </select><br>
     <label for="is_required">必須オプション</label>
-    <input type="checkbox" id="is_required" name="is_required[{{ loop.index0 }}]" value="1"><br>
-    <label for="choice_value">定義名</label>
-    <input type="textarea" id="choice_value" name="choice_value[{{ loop.index0 }}]" placeholder="改行して入力ください" value="{% if form_item.choicevalue %}{{ form_item.choicevalue }}{% endif %}"><br>
+    <input type="checkbox" id="is_required" name="is_required[{{ loop.index0 }}]" value="1"  {% if form_item.isrequired %}checked="checked"{% endif %}><br>
+    <label for="choice_value">選択肢</label>
+    <textarea id="choice_value" name="choice_value[{{ loop.index0 }}]" placeholder="改行して入力ください" rows="4" cols="40" value="{% if form_item.choicevalue %}{{ form_item.choicevalue }}{% endif %}"></textarea><br>
     <label for="validate">バリデーション</label>
     <input type="text" id="validate" name="validate[{{ loop.index0 }}]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{% if form_item.validate %}{{ form_item.validate }}{% endif %}"><br>
+    <a class="deletformbox">削除</a>
+  </div>
+  {% else %}
+  <div class="row" data-formno="0">
+    <label for="label_name">表示名</label>
+    <input type="text" id="label_name" name="label_name[0]" placeholder="名前" required value=""><br>
+    <label for="schema_name">定義名</label>
+    <input type="text" id="schema_name" name="schema_name[0]" placeholder="name" required value="{{ form_item.schemaname }}"><br>
+    <label for="input_type">フォームタイプ</label>
+    <select id="input_type" name="input_type[0]">
+      {% for key, value in itemtypes %}
+      <option value="{{ key }}" {% if form_item.input_type == key %}selected{% endif %}>{{ value }}</option>
+      {% endfor %}
+    </select><br>
+    <label for="is_required">必須オプション</label>
+    <input type="checkbox" id="is_required" name="is_required[0]" value="1"><br>
+    <label for="choice_value">選択肢</label>
+    <textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="4" cols="40" value=""></textarea><br>
+    <label for="validate">バリデーション</label>
+    <input type="text" id="validate" name="validate[0]" placeholder="ex) email /^\S+@\S+\.\S+$/" value=""><br>
+    <a class="deletformbox">削除</a>
   </div>
   {% endfor %}
   <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
   <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->
+  <p><a class="addformbox">追加</a></p>
   <input type="submit" value="Submit">
 </form>
 
 <a href="/admin/forms" alt="logout">戻る</a>
+{% endblock %}
+{% block js %}
+<script type="text/javascript">
+  // 追加
+  $('.addformbox').click(function () {
+    var clonecode = $('.row:last').clone(true);
+
+    var cloneno = clonecode.attr('data-formno');
+    var cloneno2 = parseInt(cloneno) + 1;
+    // var cloneno3 = parseInt(cloneno) + 2;
+
+    clonecode.attr('data-formno', cloneno2);
+    // clonecode.find('.no').html(cloneno3);
+
+    var tmp = clonecode.find('input#label_name').attr('name');
+    tmp = tmp.replace(/label_name\[[0-9]{1,2}/g, 'label_name[' + cloneno2);
+    clonecode.find('input#label_name').attr('name', tmp);
+
+    tmp = clonecode.find('input#schema_name').attr('name');
+    tmp = tmp.replace(/schema_name\[[0-9]{1,2}/g, 'schema_name[' + cloneno2);
+    clonecode.find('input#schema_name').attr('name', tmp);
+
+    tmp = clonecode.find('select#input_type').attr('name');
+    tmp = tmp.replace(/input_type\[[0-9]{1,2}/g, 'input_type[' + cloneno2);
+    clonecode.find('select#input_type').attr('name', tmp);
+
+    tmp = clonecode.find('input#is_required').attr('name');
+    tmp = tmp.replace(/is_required\[[0-9]{1,2}/g, 'is_required[' + cloneno2);
+    clonecode.find('input#is_required').attr('name', tmp);
+
+    tmp = clonecode.find('textarea#choice_value').attr('name');
+    tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + cloneno2);
+    clonecode.find('textarea#choice_value').attr('name', tmp);
+
+    tmp = clonecode.find('input#validate').attr('name');
+    tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + cloneno2);
+    clonecode.find('input#validate').attr('name', tmp);
+
+    clonecode.insertAfter($('.row:last'));
+  });
+
+  $('.deletformbox').click(function () {
+    $(this).parents(".row").remove();
+
+    var scount = 0;
+    $('.row').each(function () {
+      var scount2 = scount + 1;
+
+      $(this).attr('data-formno', scount);
+      // $('.no', this).html(scount2);
+
+      var tmp = $('input#label_name', this).attr('name');
+      tmp = tmp.replace(/label_name\[[0-9]{1,2}/g, 'label_name[' + scount);
+      $('input#label_name', this).attr('name', tmp);
+
+      tmp = $('input#schema_name', this).attr('name');
+      tmp = tmp.replace(/schema_name\[[0-9]{1,2}/g, 'schema_name[' + scount);
+      $('input#schema_name', this).attr('name', tmp);
+
+      tmp = $('select#input_type', this).attr('name');
+      tmp = tmp.replace(/input_type\[[0-9]{1,2}/g, 'input_type[' + scount);
+      $('select#input_type', this).attr('name', tmp);
+
+      tmp = $('input#is_required', this).attr('name');
+      tmp = tmp.replace(/is_required\[[0-9]{1,2}/g, 'is_required[' + scount);
+      $('input#is_required', this).attr('name', tmp);
+
+      tmp = $('textarea#choice_value', this).attr('name');
+      tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + scount);
+      $('textarea#choice_value', this).attr('name', tmp);
+
+      tmp = $('input#validate', this).attr('name');
+      tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + scount);
+      $('input#validate', this).attr('name', tmp);
+
+      scount += 1;
+    });
+
+  });
+
+</script>
 {% endblock %}

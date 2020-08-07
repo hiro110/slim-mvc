@@ -37,7 +37,7 @@ class FormManageController
 						// DB切断。
 						$this->db = null;
 				}
-				var_dump($forms);
+
 				$response = $this->view->render($response,
 											"admin/forms/index.html",
 										[
@@ -66,7 +66,7 @@ class FormManageController
 				$form_item =[
 					'label_name' => isset($params["label_name"]) ? $params["label_name"]: '',
 					'schema_name' => isset($params["schema_name"]) ? $params["schema_name"]: '',
-					'input_type' => isset($params["itemtype"]) ? intVal($params["itemtype"]): 0,
+					'input_type' => isset($params["input_type"]) ? intVal($params["input_type"]): 0,
 					'is_required' => (intVal($params["is_required"]) == 1) ? 1: 0,
 					'choice_value' => isset($params["choice_value"]) ? $params["choice_value"]: '',
 					'validate' => isset($params["validate"]) ? $params["validate"]: '',
@@ -126,6 +126,41 @@ class FormManageController
 						return $response;
 				}
 
+				$params = $request->getParsedBody();
+				$form_group =[
+					'id' => $fg_id,
+					'name' => isset($params["group_name"]) ? $params["group_name"]: '',
+					'base_uri' => isset($params["group_name"]) ? $params["group_name"]: '',
+				];
+
+				$form_items = [];
+				for($i = 0; $i < count($params["label_name"]); $i++) {
+					$form_items[] = [
+						'label_name' => isset($params["label_name"][$i]) ? $params["label_name"][$i]: '',
+						'schema_name' => isset($params["schema_name"][$i]) ? $params["schema_name"][$i]: '',
+						'input_type' => isset($params["input_type"][$i]) ? $params["input_type"][$i]: '',
+						'is_required' => (intVal($params["is_required"][$i]) == 1) ? 1: 0,
+						'choice_value' => isset($params["choice_value"][$i]) ? $params["choice_value"][$i] : '',
+						'validate' => isset($params["validate"][$i]) ? $params["validate"][$i]: '',
+					];
+				}
+
+				try {
+						$formDao = new FormDAO($this->db);
+						$res = $formDao->updateForm($form_group, $form_items);
+
+						if (!$res) {
+								$msg = "Failed update form";
+						}
+				} catch(PDOException $ex) {
+						var_dump($ex->getMessage());
+				} finally {
+						// DB切断。
+						$this->db = null;
+				}
+
+				return $response->withHeader('Location', '/admin/forms')->withStatus(302);
+
 				// $response = $this->view->render($response, "admin/forms/edit.html",
 				// 						[
 				// 							'user' => [
@@ -137,5 +172,4 @@ class FormManageController
 				// 						]);
 				// return $response;
 		}
-
 }

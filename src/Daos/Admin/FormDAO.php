@@ -139,7 +139,58 @@ class FormDAO
 
           $this->db->commit();
         } catch (PDOException $e) {
-          $dbh->rollback();
+          $this->db->rollback();
+          throw $e;
+        }
+
+        return $res;
+    }
+
+    public function updateForm(array $form_group, array $form_items): bool
+    {
+        $this->db->beginTransaction();
+
+        if (!$this->db->inTransaction()) {
+          throw new Exception("deactive transaction", 1);
+        }
+
+        $gid = intVal($form_group['id']);
+
+        try {
+            // group 更新
+            $sql = "update form_groups set name = :name, base_uri = :base_uri where id = :id and is_active = :is_active";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":name", $form_group['name'], PDO::PARAM_STR);
+            $stmt->bindValue(":base_uri", $form_group['base_uri'], PDO::PARAM_STR);
+            $stmt->bindValue(":id", $gid, PDO::PARAM_INT);
+            $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
+            $res = $stmt->execute();
+
+            // items 削除
+            $sql = "delete from form_items where form_group_id = :id";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":id", $gid, PDO::PARAM_INT);
+            $res = $stmt->execute();
+
+            // items 再登録
+            $sql = "insert into form_items (form_group_id, label_name, schema_name, input_type, is_required, choice_value, validate) VALUES (:form_group_id, :label_name, :schema_name, :input_type, :is_required, :choice_value, :validate)";
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($form_items as $form_item) {
+                $stmt->execute(array(
+                    ':form_group_id' => $gid,
+                    ':label_name' => $form_item['label_name'],
+                    ':schema_name' => $form_item['schema_name'],
+                    ':input_type' => intVal($form_item['input_type']),
+                    ':is_required' => intVal($form_item['is_required']),
+                    ':choice_value' => $form_item['choice_value'],
+                    ':validate' => $form_item['validate'],
+                ));
+            }
+
+            $res = $this->db->commit();
+        } catch (PDOException $e) {
+          $this->db->rollback();
           throw $e;
         }
 
