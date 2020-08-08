@@ -1,5 +1,5 @@
 <?php
-namespace Slim\MVC\controllers;
+namespace App\Controllers;
 
 use PDO;
 use PDOException;

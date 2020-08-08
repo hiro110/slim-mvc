@@ -1,0 +1,20 @@
+{% extends 'admin/base.html' %}
+{% block title %}Edit Page{% endblock %}
+{% block content %}
+
+<form method="POST">
+  {% if msg %}{{ msg }}{% endif %}
+  <input type="text" name="username" placeholder="username" value="{% if user.username%}{{ user.username }}{% endif %}">
+  <input type="password" name="password" placeholder="Password">
+  <select name="role">
+    {% for key, value in roles %}
+      <option value="{{ key }}" {% if user.role == key %}selected{% endif %}>{{ value }}</option>
+    {% endfor %}
+  </select>
+  <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
+  <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->
+  <input type="submit" value="Submit">
+</form>
+
+<a href="/admin/users" alt="logout">戻る</a>
+{% endblock %}

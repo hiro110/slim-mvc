@@ -1,0 +1,24 @@
+{% extends 'admin/base.html' %}
+{% block title %}Users List{% endblock %}
+{% block content %}
+
+<table border="2" cellpadding="6" cellspacing="5">
+  <th>id</th>
+  <th>username</th>
+  <th>role</th>
+  <th>edit</th>
+  {% for user in users %}
+  <tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.role }}</td>
+    <td><a href="/admin/users/{{ user.id }}" alt="edit">編集</a></td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if session.user.role == 0 %}
+<a href="/admin/users/add" alt="logout">新規作成</a>
+{% endif %}
+<a href="/admin" alt="logout">戻る</a>
+{% endblock %}
