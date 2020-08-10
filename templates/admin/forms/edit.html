@@ -37,7 +37,13 @@
           <td><input type="text" id="placeholder"" name="placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><input type="checkbox" id="is_required" name="is_required[{{ loop.index0 }}]" value="1" {% if form_item.isrequired %}checked="checked" {% endif %}></td>
           <td><textarea id="choice_value" name="choice_value[{{ loop.index0 }}]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
-          <td><input type="text" id="validate" name="validate[{{ loop.index0 }}]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{{ form_item.validate }}"></td>
+          <td>
+            <select id="validate" name="validate[{{ loop.index0 }}]">
+              {% for key, value in valid_types %}
+              <option value="{{ key }}" {% if form_item.validate == key %}selected{% endif %}>{{ value }}</option>
+              {% endfor %}
+            </select>
+          </td>
           <td><a class="deletformbox">削除</a></td>
         </tr>
         {% else %}
@@ -53,7 +59,14 @@
               {% if form_item.isrequired %}checked="checked" {% endif %}></td>
           <td><input type="text" id="placeholder"" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
-          <td><input type="text" id="validate" name="validate[0]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{{ form_item.validate }}"></td>
+          <!-- <td><input type="text" id="validate" name="validate[0]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{# form_item.validate #}"></td> -->
+          <td>
+              <select id="validate" name="validate[0]">
+                  {% for key, value in valid_types %}
+                  <option value="{{ key }}" {% if form_item.validate == key %}selected{% endif %}>{{ value }}</option>
+                  {% endfor %}
+              </select>
+          </td>
           <td><a class="deletformbox">削除</a></td>
         </tr>
 
@@ -63,7 +76,6 @@
     <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
     <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->
     <p><a class="addformbox">追加</a></p>
-    <!-- <input type="submit" value="Submit"> -->
     <div class="field">
       <button class="button is-success">登録</button>
     </div>
@@ -109,9 +121,12 @@
     tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + cloneno2);
     clonecode.find('textarea#choice_value').attr('name', tmp);
 
-    tmp = clonecode.find('input#validate').attr('name');
+    // tmp = clonecode.find('input#validate').attr('name');
+    // tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + cloneno2);
+    // clonecode.find('input#validate').attr('name', tmp);
+    tmp = clonecode.find('select#validate').attr('name');
     tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + cloneno2);
-    clonecode.find('input#validate').attr('name', tmp);
+    clonecode.find('select#validate').attr('name', tmp);
 
     clonecode.insertAfter($('.row:last'));
   });
@@ -150,9 +165,12 @@
       tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + scount);
       $('textarea#choice_value', this).attr('name', tmp);
 
-      tmp = $('input#validate', this).attr('name');
+      // tmp = $('input#validate', this).attr('name');
+      // tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + scount);
+      // $('input#validate', this).attr('name', tmp);
+      tmp = $('select#validate', this).attr('name');
       tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + scount);
-      $('input#validate', this).attr('name', tmp);
+      $('select#validate', this).attr('name', tmp);
 
       scount += 1;
     });

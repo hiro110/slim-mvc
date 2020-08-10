@@ -53,7 +53,7 @@ class FormManageController
 				if ($request->getMethod() == "GET") {
 						$response = $this->view->render($response,
 													"admin/forms/edit.html",
-													['itemtypes' => FormDAO::ITEM_TYPE]);
+													['itemtypes' => FormDAO::ITEM_TYPE, 'valid_types' => FormDAO::VALIDATE_TYPE,]);
 						return $response;
 				}
 
@@ -122,7 +122,8 @@ class FormManageController
 															'form_group' => $group,
 															'form_items' => $items,
 															'msg' => $msg,
-															'itemtypes' => FormDAO::ITEM_TYPE
+															'itemtypes' => FormDAO::ITEM_TYPE,
+															'valid_types' => FormDAO::VALIDATE_TYPE,
 													]);
 						return $response;
 				}
