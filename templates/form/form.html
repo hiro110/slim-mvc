@@ -1,26 +1,41 @@
-{% extends 'admin/base.html' %}
-{% block title %}Top Page{% endblock %}
+{% extends './base.html' %}
+{% block title %}Entry Page{% endblock %}
 {% block content %}
-<form method="POST" action="/{{ uri }}/comfirm">
-  {% for form_item in form_items %}
-    <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
-    {% if form_item.inputtype == 5 %}
-    <select id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}">
-      {% for key, value in form_item.choicevalue %}
-      <option value="{{ loop.index0 }}">{{ value }}</option>
+<div style="width: 600px; margin: 0 auto; padding: 20px;">
+    <form method="POST" action="/{{ uri }}/comfirm">
+      {% for form_item in form_items %}
+        <div class="field">
+        {% if form_item.inputtype == 4 %}
+        <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+        <input type="password" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
+        {% elseif form_item.inputtype == 5 %}
+        <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+        <div class="select">
+        <select id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}">
+          {% for key, value in form_item.choicevalue %}
+          <option value="{{ key }}">{{ value }}</option>
+          {% endfor %}
+        </select></div>
+        {% elseif form_item.inputtype == 6 %}
+          {% for key, value in form_item.choicevalue %}
+          <label class="radio" for="{{ form_item.schemaname }}">{{ form_item.labelname }}
+          <input type="radio" name="{{ form_item.schemaname }}" value="{{ value }}" {% if key == 0 %}checked="checked"{% endif %}>{{ value }}</label>
+          {% endfor %}
+        {% elseif form_item.inputtype == 7 %}
+          <label class="checkbox" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+          {% for key, value in form_item.choicevalue %}
+          <input type="checkbox" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" value="{{ key }}">{{ value }}
+          {% endfor %}
+        {% elseif form_item.inputtype == 8 %}
+        <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+        <input type="date" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}"  {% if form_item.isrequired %}required{% endif %}><br>
+        {% else %}
+        <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+        <input  class="input" type="text" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.isrequired %}required{% endif %} {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
+        {% endif %}
+        </div>
       {% endfor %}
-    </select><br>
-    {% elseif form_item.inputtype == 4 %}
-    <input type="password" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
-    {% elseif form_item.inputtype == 6 %}
-      {% for key, value in form_item.choicevalue %}
-      <input type="radio" name="{{ form_item.schemaname }}" value="{{ value }}" {% if key == 0 %}checked="checked"{% endif %}>
-      {% endfor %}
-    {% elseif form_item.inputtype == 8 %}
-    <input type="date" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}"  {% if form_item.isrequired %}required{% endif %}><br>
-    {% else %}
-    <input type="text" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.isrequired %}required{% endif %} {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
-    {% endif %}
-  {% endfor %}
-</form>
+      <input type="submit" value="submit">
+    </form>
+</div>
 {% endblock %}
