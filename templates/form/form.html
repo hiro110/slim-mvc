@@ -31,7 +31,7 @@
         <input type="date" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}"  {% if form_item.isrequired %}required{% endif %}><br>
         {% else %}
         <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
-        <input  class="input" type="text" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.isrequired %}required{% endif %} {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
+        <input  class="input" type="text" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" placeholder="{{ form_item.placeholder }}" {% if form_item.isrequired %}required{% endif %} {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
         {% endif %}
         </div>
       {% endfor %}

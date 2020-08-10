@@ -42,9 +42,23 @@ class FormController
 							return $response->withHeader('Location', '/')->withStatus(302);
 						}
 
-						$items = $formDao->findItemByGid($gid);
+						$tmps = $formDao->findItemByGid($gid);
 						if (!$items) {
 							$msg = "Not found form items";
+						}
+
+						$items = [];
+						foreach ($tmps as $tmp) {
+								$items[] = [
+									'id' => $tmp->getId(),
+									'labelname' => $tmp->getLabelName(),
+									'schemaname' => $tmp->getSchemaName(),
+									'inputtype' => $tmp->getInputType(),
+									'placeholder' => $tmp->getPlaceholder(),
+									'isrequired' => $tmp->getIsRequired(),
+									'choicevalue' => explode("\n", str_replace(array("\r\n","\r","\n"), "\n", $tmp->getChoiceValue())),
+									'validate' => $tmp->getValidate(),
+								];
 						}
 
 				} catch(PDOException $ex) {

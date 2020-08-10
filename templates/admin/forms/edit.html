@@ -17,6 +17,7 @@
           <th>表示名</th>
           <th>定義名</th>
           <th>フォームタイプ</th>
+          <th>入力例</th>
           <th>必須オプション</th>
           <th>選択肢</th>
           <th>バリデーション</th>
@@ -33,6 +34,7 @@
             <option value="{{ key }}" {% if form_item.inputtype == key %}selected{% endif %}>{{ value }}</option>
             {% endfor %}
           </select></td>
+          <td><input type="text" id="placeholder"" name="placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><input type="checkbox" id="is_required" name="is_required[{{ loop.index0 }}]" value="1" {% if form_item.isrequired %}checked="checked" {% endif %}></td>
           <td><textarea id="choice_value" name="choice_value[{{ loop.index0 }}]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
           <td><input type="text" id="validate" name="validate[{{ loop.index0 }}]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{{ form_item.validate }}"></td>
@@ -49,6 +51,7 @@
             </select></td>
           <td><input type="checkbox" id="is_required" name="is_required[0]" value="1"
               {% if form_item.isrequired %}checked="checked" {% endif %}></td>
+          <td><input type="text" id="placeholder"" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
           <td><input type="text" id="validate" name="validate[0]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{{ form_item.validate }}"></td>
           <td><a class="deletformbox">削除</a></td>
@@ -94,6 +97,10 @@
     tmp = tmp.replace(/input_type\[[0-9]{1,2}/g, 'input_type[' + cloneno2);
     clonecode.find('select#input_type').attr('name', tmp);
 
+    tmp = clonecode.find('input#placeholder').attr('name');
+    tmp = tmp.replace(/placeholder\[[0-9]{1,2}/g, 'placeholder[' + cloneno2);
+    clonecode.find('input#placeholder').attr('name', tmp);
+
     tmp = clonecode.find('input#is_required').attr('name');
     tmp = tmp.replace(/is_required\[[0-9]{1,2}/g, 'is_required[' + cloneno2);
     clonecode.find('input#is_required').attr('name', tmp);
@@ -130,6 +137,10 @@
       tmp = $('select#input_type', this).attr('name');
       tmp = tmp.replace(/input_type\[[0-9]{1,2}/g, 'input_type[' + scount);
       $('select#input_type', this).attr('name', tmp);
+
+      tmp = $('input#placeholder', this).attr('name');
+      tmp = tmp.replace(/placeholder\[[0-9]{1,2}/g, 'placeholder[' + scount);
+      $('input#placeholder', this).attr('name', tmp);
 
       tmp = $('input#is_required', this).attr('name');
       tmp = tmp.replace(/is_required\[[0-9]{1,2}/g, 'is_required[' + scount);

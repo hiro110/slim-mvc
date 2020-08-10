@@ -63,6 +63,7 @@ class FormDAO
                 $labelname = $row["label_name"];
                 $schemaname = $row["schema_name"];
                 $inputtype = intVal($row["input_type"]);
+                $placeholder = $row["placeholder"];
                 $isrequired = intVal($row["is_required"]) == 1;
                 $choicevalue = $row["choice_value"];
                 $validate = $row["validate"];
@@ -72,6 +73,7 @@ class FormDAO
                 $fi->setLabelName($labelname);
                 $fi->setSchemaName($schemaname);
                 $fi->setInputType($inputtype);
+                $fi->setPlaceholder($placeholder);
                 $fi->setIsRequired($isrequired);
                 $fi->setChoiceValue($choicevalue);
                 $fi->setValidate($validate);
@@ -133,6 +135,7 @@ class FormDAO
           $stmt->bindValue(":label_name", $form_item['label_name'], PDO::PARAM_STR);
           $stmt->bindValue(":schema_name", $form_item['schema_name'], PDO::PARAM_STR);
           $stmt->bindValue(":input_type", intVal($form_item['input_type']), PDO::PARAM_INT);
+          $stmt->bindValue(":placeholder", $form_item['placeholder'], PDO::PARAM_STR);
           $stmt->bindValue(":is_required", intVal($form_item['is_required']), PDO::PARAM_INT);
           $stmt->bindValue(":choice_value", $form_item['choice_value'], PDO::PARAM_STR);
           $stmt->bindValue(":validate", $form_item['validate'], PDO::PARAM_STR);
@@ -174,7 +177,7 @@ class FormDAO
             $res = $stmt->execute();
 
             // items 再登録
-            $sql = "insert into form_items (form_group_id, label_name, schema_name, input_type, is_required, choice_value, validate) VALUES (:form_group_id, :label_name, :schema_name, :input_type, :is_required, :choice_value, :validate)";
+            $sql = "insert into form_items (form_group_id, label_name, schema_name, input_type, placeholder, is_required, choice_value, validate) VALUES (:form_group_id, :label_name, :schema_name, :input_type, :placeholder, :is_required, :choice_value, :validate)";
             $stmt = $this->db->prepare($sql);
 
             foreach ($form_items as $form_item) {
@@ -183,6 +186,7 @@ class FormDAO
                     ':label_name' => $form_item['label_name'],
                     ':schema_name' => $form_item['schema_name'],
                     ':input_type' => intVal($form_item['input_type']),
+                    ':placeholder' => $form_item['placeholder'],
                     ':is_required' => intVal($form_item['is_required']),
                     ':choice_value' => $form_item['choice_value'],
                     ':validate' => $form_item['validate'],
