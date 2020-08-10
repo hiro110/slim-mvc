@@ -20,7 +20,7 @@ class FormDAO
     * 7=checkbox
     * 8=date
     */
-    public const ITEM_TYPE = ['文字列', '数値', '電話番号', 'Eメール', 'パスワード', 'セレクトボックス', 'ラジオボタン', 'チェックボックス', '日付'];
+    public const ITEM_TYPE = ['テキスト', 'テキストエリア', '電話番号', 'Eメール', 'パスワード', 'セレクトボックス', 'ラジオボタン', 'チェックボックス', '日付'];
     public const VALIDATE_TYPE = [
         '' => 'なし',
         '/^\S+@\S+\.\S+$/' => 'Eメール',
