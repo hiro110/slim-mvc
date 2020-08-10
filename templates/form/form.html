@@ -1,0 +1,26 @@
+{% extends 'admin/base.html' %}
+{% block title %}Top Page{% endblock %}
+{% block content %}
+<form method="POST" action="/{{ uri }}/comfirm">
+  {% for form_item in form_items %}
+    <label for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+    {% if form_item.inputtype == 5 %}
+    <select id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}">
+      {% for key, value in form_item.choicevalue %}
+      <option value="{{ loop.index0 }}">{{ value }}</option>
+      {% endfor %}
+    </select><br>
+    {% elseif form_item.inputtype == 4 %}
+    <input type="password" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
+    {% elseif form_item.inputtype == 6 %}
+      {% for key, value in form_item.choicevalue %}
+      <input type="radio" name="{{ form_item.schemaname }}" value="{{ value }}" {% if key == 0 %}checked="checked"{% endif %}>
+      {% endfor %}
+    {% elseif form_item.inputtype == 8 %}
+    <input type="date" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}"  {% if form_item.isrequired %}required{% endif %}><br>
+    {% else %}
+    <input type="text" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" {% if form_item.isrequired %}required{% endif %} {% if form_item.validate %}pattern="{{ form_item.validate }}"{% endif %}><br>
+    {% endif %}
+  {% endfor %}
+</form>
+{% endblock %}

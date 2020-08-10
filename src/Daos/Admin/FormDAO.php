@@ -28,6 +28,7 @@ class FormDAO
     }
 
     public function findGroupByPk(int $id, int $is_active = 1): ?FormGroup
+
     {
         $sql = "select * from form_groups where id = :id and is_active = :is_active";
         $stmt = $this->db->prepare($sql);
@@ -195,5 +196,21 @@ class FormDAO
         }
 
         return $res;
+    }
+
+    public function findByUri(string $uri, int $is_active = 1): ?int
+    {
+        $sql = "select * from form_groups where base_uri = :uri and is_active = :is_active";
+        $stmt = $this->db->prepare($sql);
+        $stmt->bindValue(":uri", $uri, PDO::PARAM_STR);
+        $stmt->bindValue(":is_active", $is_active, PDO::PARAM_INT);
+        $res = $stmt->execute();
+
+        $id = 0;
+        if ($res && $row = $stmt->fetch()) {
+            $id = intVal($row["id"]);
+        }
+
+        return $id;
     }
 }

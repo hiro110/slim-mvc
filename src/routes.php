@@ -11,9 +11,9 @@ use Psr\Container\ContainerInterface;
 $app->get('/', FormController::class.":getIndex");
 // ユーザサイト
 $app->group('/form', function (RouteCollectorProxy $group){
-  $group->map(["GET"], "[/]", FormController::class.":getIndex");
-  $group->map(["GET","POST"],'/confirm', FormController::class.":getConfirm");
-  $group->map(["GET","POST"],'/complete', FormController::class.":getComplete");
+  $group->map(["GET"], "/{uri}", FormController::class.":getForm");
+  $group->map(["GET","POST"],'/{uri}/confirm', FormController::class.":getConfirm");
+  $group->map(["GET","POST"],'/{uri}/complete', FormController::class.":getComplete");
 });
 
 // 管理サイト
