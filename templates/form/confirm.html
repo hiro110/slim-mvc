@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block title %}confirm Page{% endblock %}
+{% block content %}
+{% set key = "" %}
+
+<div style="width: 600px; margin: 0 auto; padding: 20px;">
+    <form method="POST" action="/form/{{ uri }}/complete">
+        {% for form_item in form_items %}
+        {% set key = form_item.schemaname %}
+        <div class="field">
+            <label class="label" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
+            <div>{{ attribute(session.form, key) }}</div>
+        </div>
+        {% endfor %}
+        {% for form_item in form_items %}
+        <input type="hidden" name="{{ form_item.schemaname }}" value="{{ attribute(session.form, key) }}">
+        {% endfor %}
+        <div class="field is-grouped">
+            <button class="button is-link">Submit</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

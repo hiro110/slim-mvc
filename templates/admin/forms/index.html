@@ -1,26 +1,30 @@
-{% extends 'admin/base.html' %}
+{% extends './base.html' %}
 {% block title %}Forms List{% endblock %}
 {% block content %}
 
-<table border="2" cellpadding="6" cellspacing="5">
-  <th>id</th>
-  <th>name</th>
-  <th>uri</th>
-  <th>edit</th>
-  {% for form in forms %}
-  <tr>
-    <td>{{ form.id }}</td>
-    <td>{{ form.name }}</td>
-    <td>{{ form.uri }}</td>
-    <td><a href="/admin/forms/{{ form.id }}" alt="edit">編集</a></td>
-  </tr>
-  {% endfor %}
-</table>
+<div style="width: 1200px; margin:0 auto; padding: 10px;">
+    <table class="table is-striped is-hoverable is-fullwidth">
+        <th>id</th>
+        <th>name</th>
+        <th>uri</th>
+        <th>edit</th>
+        {% for form in forms %}
+        <tr>
+            <td>{{ form.id }}</td>
+            <td>{{ form.name }}</td>
+            <td>{{ form.uri }}</td>
+            <td><a href="/admin/forms/{{ form.id }}" alt="edit">編集</a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div class="field is-grouped">
+        <!-- <button class="button is-link">Submit</button> -->
+        {% if session.user.role == 0 %}
+        <a class="button is-link" href="/admin/forms/add" alt="logout">新規作成</a>
+        {% endif %}
+        <div class="mx-2"></div>
+        <a class="button is-link" href="/admin" alt="logout">戻る</a>
+    </div>
 
-
-
-{% if session.user.role == 0 %}
-<a href="/admin/forms/add" alt="logout">新規作成</a>
-{% endif %}
-<a href="/admin" alt="logout">戻る</a>
+</div>
 {% endblock %}

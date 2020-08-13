@@ -53,7 +53,7 @@ class FormManageController
 				if ($request->getMethod() == "GET") {
 						$response = $this->view->render($response,
 													"admin/forms/edit.html",
-													['itemtypes' => FormDAO::ITEM_TYPE]);
+													['itemtypes' => FormDAO::ITEM_TYPE, 'valid_types' => FormDAO::VALIDATE_TYPE,]);
 						return $response;
 				}
 
@@ -67,6 +67,7 @@ class FormManageController
 					'label_name' => isset($params["label_name"]) ? $params["label_name"]: '',
 					'schema_name' => isset($params["schema_name"]) ? $params["schema_name"]: '',
 					'input_type' => isset($params["input_type"]) ? intVal($params["input_type"]): 0,
+					'placeholder' => isset($params["placeholder"]) ? $params["placeholder"]: '',
 					'is_required' => (intVal($params["is_required"]) == 1) ? 1: 0,
 					'choice_value' => isset($params["choice_value"]) ? $params["choice_value"]: '',
 					'validate' => isset($params["validate"]) ? $params["validate"]: '',
@@ -121,7 +122,8 @@ class FormManageController
 															'form_group' => $group,
 															'form_items' => $items,
 															'msg' => $msg,
-															'itemtypes' => FormDAO::ITEM_TYPE
+															'itemtypes' => FormDAO::ITEM_TYPE,
+															'valid_types' => FormDAO::VALIDATE_TYPE,
 													]);
 						return $response;
 				}
@@ -139,6 +141,7 @@ class FormManageController
 						'label_name' => isset($params["label_name"][$i]) ? $params["label_name"][$i]: '',
 						'schema_name' => isset($params["schema_name"][$i]) ? $params["schema_name"][$i]: '',
 						'input_type' => isset($params["input_type"][$i]) ? $params["input_type"][$i]: '',
+						'placeholder' => isset($params["placeholder"][$i]) ? $params["placeholder"][$i]: '',
 						'is_required' => (intVal($params["is_required"][$i]) == 1) ? 1: 0,
 						'choice_value' => isset($params["choice_value"][$i]) ? $params["choice_value"][$i] : '',
 						'validate' => isset($params["validate"][$i]) ? $params["validate"][$i]: '',

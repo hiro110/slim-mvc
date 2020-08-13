@@ -1,12 +1,22 @@
-{% extends 'admin/base.html' %}
+{% extends './base.html' %}
 {% block title %}Login{% endblock %}
 {% block content %}
-<form method="POST">
-  {% if msg %}{{ msg }}{% endif %}
-  <input type="text" name="username" placeholder="Username">
-  <input type="password" name="password" placeholder="Password">
-  <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
-  <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->
-  <input type="submit" value="Submit">
-</form>
+<div style="height: 200px;"></div>
+<div style="width: 400px; margin: 0 auto; padding: 20px;">
+  <form method="POST">
+    {% if msg %}{{ msg }}{% endif %}
+    <div class="field">
+        <input class="input" type="text" name="username" placeholder="Username">
+    </div>
+    <div class="field">
+        <input class="input" type="password" name="password" placeholder="Password">
+    </div>
+    <!-- <input type="hidden" name="csrf_name" value="{# csrf_name #}"> -->
+    <!-- <input type="hidden" name="csrf_value" value="{# csrf_value #}"> -->
+    <div class="field">
+        <!-- <input type="submit" value="Login"> -->
+        <button class="button is-success">Login</button>
+    </div>
+  </form>
+</div>
 {% endblock %}

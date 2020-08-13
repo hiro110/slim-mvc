@@ -8,6 +8,7 @@ class FormItem
   private $labelname;
   private $schemaname;
   private $inputtype;
+  private $placeholder;
   private $isrequired;
   private $choicevalue;
   private $validate;
@@ -64,6 +65,17 @@ class FormItem
   public function setInputType(?int $inputtype): void
   {
     $this->inputtype = $inputtype;
+  }
+
+  // placeholder
+  public function getPlaceholder(): ?string
+  {
+    return $this->placeholder;
+  }
+
+  public function setPlaceholder(?string $placeholder): void
+  {
+    $this->placeholder = $placeholder;
   }
 
   // isrequired

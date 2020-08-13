@@ -1,38 +1,140 @@
 <?php
-namespace App\Daos\Admin;
+namespace App\Daos\Form;
 
 use PDO;
-use App\Entities\Admin\FormGroup;
-use App\Entities\Admin\FormItem;
+use App\Entities\Form\Submit;
+use App\Entities\Form\Value;
 
-class FormDAO
+class SubmitDAO
 {
     private $db;
-
-    /*
-    * 0=text
-    * 1=number
-    * 2=tel
-    * 3=email
-    * 4=password
-    * 5=select
-    * 6=radio
-    * 7=checkbox
-    * 8=date
-    */
-    public const ITEM_TYPE = ['テキスト', 'テキストエリア', '電話番号', 'Eメール', 'パスワード', 'セレクトボックス', 'ラジオボタン', 'チェックボックス', '日付'];
-    public const VALIDATE_TYPE = [
-        '' => 'なし',
-        '/^\S+@\S+\.\S+$/' => 'Eメール',
-        '/^\d{10}$|^\d{11}$/' => '電話番号（ハイフンなし）',
-        '/^\d{3}[-]\d{4}$|^\d{3}[-]\d{2}$|^\d{3}$|^\d{5}$|^\d{7}$/' => '郵便番号（ハイフンあり・なし両方）',
-        '/^[0-9]+$/' => '全て数値（半角）',
-        '/^[0-9０-９]+$/' => '全て数値（全角,半角）',
-    ];
 
     public function __construct(PDO $db)
     {
         $this->db = $db;
+    }
+
+    public function addSubmit(int $gid, array $values): bool
+    {
+        $this->db->beginTransaction();
+
+        if (!$this->db->inTransaction()) {
+          throw new Exception("deactive transaction", 1);
+        }
+
+        try {
+
+            $sql = "insert into submits (form_group_id, is_active) VALUES (:form_group_id, :is_active)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->bindValue(":form_group_id", intVal($gid), PDO::PARAM_INT);
+            $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
+            $res = $stmt->execute();
+
+            $sid = $this->db->lastInsertId();
+
+            $sql = "insert into submit_values (submit_id,label_name,schema_name,string,num,datetime)
+                    VALUES (:submit_id,:label_name,:schema_name,:string,:num,:datetime)";
+            $stmt = $this->db->prepare($sql);
+
+            foreach ($values as $key => $value) {
+                switch (gettype($value)) {
+                    case 'string':
+                        $stmt->execute(array(
+                            ':submit_id' => intVal($sid),
+                            ':label_name' => '',
+                            ':schema_name' => $key,
+                            ':string' => $value,
+                            ':num' => 0,
+                            ':datetime' => null,
+                        ));
+                    break;
+
+                    case 'integer':
+                        $stmt->execute(array(
+                            ':submit_id' => intVal($sid),
+                            ':label_name' => '',
+                            ':schema_name' => $key,
+                            ':string' => '',
+                            ':num' => $value,
+                            ':datetime' => null,
+                        ));
+                    break;
+
+                    default:
+                        break;
+                }
+            }
+
+          $this->db->commit();
+        } catch (PDOException $e) {
+          $this->db->rollback();
+          throw $e;
+        }
+
+        return $res;
+    }
+
+    public function addForm(array $form_group, array $form_item): bool
+    {
+        $this->db->beginTransaction();
+
+        if (!$this->db->inTransaction()) {
+          throw new Exception("deactive transaction", 1);
+        }
+
+        try {
+          $sql = "insert into submits (is_actve) VALUES (:is_active)";
+          $stmt = $this->db->prepare($sql);
+          $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
+          $res = $stmt->execute();
+
+          $sid = $this->db->lastInsertId();
+
+          $sql = "insert into form_items (submit_id, label_name, schema_name, str, int, date) VALUES (:submit_id, :label_name, :schema_name, :str, :int, :date)";
+          $stmt = $this->db->prepare($sql);
+
+          foreach ($form_items as $form_item) {
+              $stmt->execute(array(
+                  ':submit_id' => intVal($sid),
+                  ':label_name' => $form_item['label_name'],
+                  ':schema_name' => $form_item['schema_name'],
+                  ':str' => $form_item['str'],
+                  ':int' => intVal($form_item['int']),
+                  ':date' => intVal($form_item['date']),
+              ));
+          }
+        //   $stmt->bindValue(":submit_id", intVal($sid), PDO::PARAM_INT);
+        //   $stmt->bindValue(":label_name", $form_item['label_name'], PDO::PARAM_STR);
+        //   $stmt->bindValue(":schema_name", $form_item['schema_name'], PDO::PARAM_STR);
+        //   $stmt->bindValue(":str", $form_item['str'], PDO::PARAM_STR);
+        //   $stmt->bindValue(":int", intVal($form_item['int']), PDO::PARAM_INT);
+        //   $stmt->bindValue(":date", intVal($form_item['date']), PDO::PARAM_DATE);
+        //   $res = $stmt->execute();
+
+          // items 再登録
+            // $sql = "insert into form_items (form_group_id, label_name, schema_name, input_type, placeholder, is_required, choice_value, validate) VALUES (:form_group_id, :label_name, :schema_name, :input_type, :placeholder, :is_required, :choice_value, :validate)";
+            // $stmt = $this->db->prepare($sql);
+
+            // foreach ($form_items as $form_item) {
+            //     $stmt->execute(array(
+            //         ':form_group_id' => $gid,
+            //         ':label_name' => $form_item['label_name'],
+            //         ':schema_name' => $form_item['schema_name'],
+            //         ':input_type' => intVal($form_item['input_type']),
+            //         ':placeholder' => $form_item['placeholder'],
+            //         ':is_required' => intVal($form_item['is_required']),
+            //         ':choice_value' => $form_item['choice_value'],
+            //         ':validate' => $form_item['validate'],
+            //     ));
+            // }
+
+          $this->db->commit();
+        } catch (PDOException $e) {
+          $this->db->rollback();
+          throw $e;
+        }
+
+        return $res;
     }
 
     public function findGroupByPk(int $id, int $is_active = 1): ?FormGroup
@@ -117,45 +219,6 @@ class FormDAO
         }
 
         return $forms;
-    }
-
-    public function addForm(array $form_group, array $form_item): bool
-    {
-        $this->db->beginTransaction();
-
-        if (!$this->db->inTransaction()) {
-          throw new Exception("deactive transaction", 1);
-        }
-
-        try {
-          $sql = "insert into form_groups (name, base_uri, is_active) VALUES (:name, :base_uri, :is_active)";
-          $stmt = $this->db->prepare($sql);
-          $stmt->bindValue(":name", $form_group['name'], PDO::PARAM_STR);
-          $stmt->bindValue(":base_uri", $form_group['base_uri'], PDO::PARAM_STR);
-          $stmt->bindValue(":is_active", 1, PDO::PARAM_INT);
-          $res = $stmt->execute();
-
-          $gid = $this->db->lastInsertId();
-
-          $sql = "insert into form_items (form_group_id, label_name, schema_name, input_type, is_required, choice_value, validate) VALUES (:form_group_id, :label_name, :schema_name, :input_type, :is_required, :choice_value, :validate)";
-          $stmt = $this->db->prepare($sql);
-          $stmt->bindValue(":form_group_id", intVal($gid), PDO::PARAM_INT);
-          $stmt->bindValue(":label_name", $form_item['label_name'], PDO::PARAM_STR);
-          $stmt->bindValue(":schema_name", $form_item['schema_name'], PDO::PARAM_STR);
-          $stmt->bindValue(":input_type", intVal($form_item['input_type']), PDO::PARAM_INT);
-          $stmt->bindValue(":placeholder", $form_item['placeholder'], PDO::PARAM_STR);
-          $stmt->bindValue(":is_required", intVal($form_item['is_required']), PDO::PARAM_INT);
-          $stmt->bindValue(":choice_value", $form_item['choice_value'], PDO::PARAM_STR);
-          $stmt->bindValue(":validate", $form_item['validate'], PDO::PARAM_STR);
-          $res = $stmt->execute();
-
-          $this->db->commit();
-        } catch (PDOException $e) {
-          $this->db->rollback();
-          throw $e;
-        }
-
-        return $res;
     }
 
     public function updateForm(array $form_group, array $form_items): bool
