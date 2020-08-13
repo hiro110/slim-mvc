@@ -105,11 +105,6 @@ class FormController
 									'id' => $tmp->getId(),
 									'labelname' => $tmp->getLabelName(),
 									'schemaname' => $tmp->getSchemaName(),
-									'inputtype' => $tmp->getInputType(),
-									'placeholder' => $tmp->getPlaceholder(),
-									'isrequired' => $tmp->getIsRequired(),
-									'choicevalue' => explode("\n", str_replace(array("\r\n","\r","\n"), "\n", $tmp->getChoiceValue())),
-									'validate' => $tmp->getValidate(),
 								];
 
 								$_SESSION['form'][$tmp->getSchemaName()] = $params[$tmp->getSchemaName()];
