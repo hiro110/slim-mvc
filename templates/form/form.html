@@ -2,7 +2,7 @@
 {% block title %}Entry Page{% endblock %}
 {% block content %}
 <div style="width: 600px; margin: 0 auto; padding: 20px;">
-    <form method="POST" action="/{{ uri }}/comfirm">
+    <form method="POST" action="/form/{{ uri }}/confirm">
       {% for form_item in form_items %}
         <div class="field">
         {% if form_item.inputtype == 1 %}
@@ -16,7 +16,7 @@
         <div class="select">
           <select id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}">
             {% for key, value in form_item.choicevalue %}
-            <option value="{{ key }}">{{ value }}</option>
+            <option value="{{ value }}">{{ value }}</option>
             {% endfor %}
           </select>
         </div>
@@ -28,7 +28,7 @@
         {% elseif form_item.inputtype == 7 %}
           <label class="label checkbox" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
           {% for key, value in form_item.choicevalue %}
-          <input type="checkbox" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" value="{{ key }}">{{ value }}
+          <input type="checkbox" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" value="{{ value }}">{{ value }}
           {% endfor %}
         {% elseif form_item.inputtype == 8 %}
         <label class="label" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>

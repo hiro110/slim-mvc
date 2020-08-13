@@ -102,6 +102,8 @@ CREATE TABLE `form_items` (
 
 CREATE TABLE `submits` (
   `id` int AUTO_INCREMENT,
+  `form_group_id` int NOT NULL DEFAULT 0,
+  `is_active` tinyint NOT NULL DEFAULT 1,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),
@@ -109,14 +111,14 @@ CREATE TABLE `submits` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 
-CREATE TABLE `values` (
+CREATE TABLE `submit_values` (
   `id` int AUTO_INCREMENT,
   `submit_id` int,
   `label_name` varchar(255) NOT NULL DEFAULT '',
   `schema_name` varchar(255) NOT NULL DEFAULT '',
-  `text` text NOT NULL DEFAULT '',
-  `int` int NOT NULL DEFAULT 0,
-  `date` date NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `string` text,
+  `num` int NOT NULL DEFAULT 0,
+  `datetime` timestamp null DEFAULT null,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

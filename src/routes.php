@@ -12,8 +12,8 @@ $app->get('/', FormController::class.":getIndex");
 // ユーザサイト
 $app->group('/form', function (RouteCollectorProxy $group){
   $group->map(["GET"], "/{uri}", FormController::class.":getForm");
-  $group->map(["GET","POST"],'/{uri}/confirm', FormController::class.":getConfirm");
-  $group->map(["GET","POST"],'/{uri}/complete', FormController::class.":getComplete");
+  $group->map(["GET","POST"],'/{uri}/confirm', FormController::class.":postConfirm");
+  $group->map(["GET","POST"],'/{uri}/complete', FormController::class.":postComplete");
 });
 
 // 管理サイト
