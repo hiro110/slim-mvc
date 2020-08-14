@@ -1,4 +1,5 @@
 <?php
+use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 
 if (PHP_SAPI == 'cli-server') {
@@ -9,10 +10,27 @@ if (PHP_SAPI == 'cli-server') {
 }
 
 require_once( __DIR__ . '/../vendor/autoload.php');
+
+$dot_env = __DIR__. '/../.env';
+if (is_readable($dot_env)) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+    $dotenv->load();
+}
+
+$containerBuilder = new ContainerBuilder();
+
 session_start();
-require_once( __DIR__ . '/../src/settings.php');
-require_once( __DIR__ . '/../src/dependencies.php');
+$settings = require_once( __DIR__ . '/../src/settings.php');
+$settings($containerBuilder);
+
+$dependencies = require_once( __DIR__ . '/../src/dependencies.php');
+$dependencies($containerBuilder);
+
+$container = $containerBuilder->build();
+
+AppFactory::setContainer($container);
 $app = AppFactory::create();
+
 require_once( __DIR__ . '/../src/middleware.php');
 require_once( __DIR__ . '/../src/routes.php');
 $app->run();
