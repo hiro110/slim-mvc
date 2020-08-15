@@ -2,60 +2,52 @@
 declare(strict_types=1);
 
 use PDO;
-use DI\Container;
+use DI\ContainerBuilder;
+// use DI\Container;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 // use Slim\Flash\Messages;
 use Slim\Csrf\Guard;
+use Psr\Container\ContainerInterface;
 
-// $dotenv = Dotenv\Dotenv::createImmutable(__DIR__, '../');
-// $dotenv->load();
 
-$container = new Container();
+return function (ContainerBuilder $containerBuilder) {
+    $containerBuilder->addDefinitions([
+        'view' => function(ContainerInterface $c){
+            $twig = Twig::create(__DIR__ . '/../templates');
+            $env = $twig->getEnvironment();
+            $env->addGlobal('session', $_SESSION);
+            return $twig;
+        },
+        'logger' => function (ContainerInterface $c) {
+            $logger = new Logger();
+            $filerHandler = new StreamHandler(__DIR__ . '/../logs/app.log');
+            $logger->pushHandler($filerHandler);
+            return $logger;
+        },
+        'guard' => function (ContainerInterface $c) {
+            $guard = new Guard;
+            return $guard;
+        },
+        'db' => function (ContainerInterface $c) {
+            $settings = $c->get('settings');
+            $dbsettings = $settings['db'];
 
-$container->set('view',
-    function() {
-        $twig = Twig::create(__DIR__ . '/../templates');
-        $env = $twig->getEnvironment();
-        $env->addGlobal('session', $_SESSION);
-        return $twig;
-    }
-);
+            // $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=UTF8';
+            // $db_user = getenv('DB_USER');
+            // $db_pass = getenv('DB_PASSWORD');
+            $dsn = 'mysql:host=' . $dbsettings['host'] . ';dbname=' . $dbsettings['schema'] . ';charset=UTF8';
+            $db_user = $dbsettings['user'];
+            $db_pass = $dbsettings['pass'];
 
-$container->set('logger',
-    function() {
-        $logger = new Logger();
-        $filerHandler = new StreamHandler(__DIR__ . '/../logs/app.log');
-        $logger->pushHandler($filerHandler);
-        return $logger;
-    }
-);
+            $pdo = new PDO($dsn, $db_user, $db_pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 
-$container->set('guard',
-    function() {
-        $guard = new Guard;
-        return $guard;
-    }
-);
-
-$container->set('db',
-    function() {
-        // $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=UTF8';
-        // $db_user = getenv('DB_USER');
-        // $db_pass = getenv('DB_PASSWORD');
-        $dsn = 'mysql:host=localhost;dbname=app3;charset=UTF8';
-        $db_user = 'app3';
-        $db_pass = 'kQpGeMS,aRD5';
-
-        $pdo = new PDO($dsn, $db_user, $db_pass);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-        return $pdo;
-    }
-);
-
-AppFactory::setContainer($container);
+            return $pdo;
+        }
+    ]);
+};
