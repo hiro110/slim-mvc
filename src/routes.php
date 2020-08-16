@@ -4,6 +4,7 @@ use App\Controllers\Admin\AuthController;
 use App\Controllers\Admin\User\UserManageController;
 use App\Controllers\Admin\Form\FormManageController;
 use App\Middlewares\LoggedInCheckMiddleware;
+use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
 use Psr\Container\ContainerInterface;

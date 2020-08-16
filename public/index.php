@@ -1,6 +1,10 @@
 <?php
+
+use App\Application\Handlers\HttpErrorHandler;
+use App\Application\ResponseEmitter\ResponseEmitter;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
+use Slim\Factory\ServerRequestCreatorFactory;
 
 if (PHP_SAPI == 'cli-server') {
     $file = __DIR__ . $_SERVER['REQUEST_URI'];
@@ -30,7 +34,26 @@ $container = $containerBuilder->build();
 
 AppFactory::setContainer($container);
 $app = AppFactory::create();
+$callableResolver = $app->getCallableResolver();
 
 require_once( __DIR__ . '/../src/middleware.php');
 require_once( __DIR__ . '/../src/routes.php');
-$app->run();
+// $routes = require_once( __DIR__ . '/../src/routes.php');
+// $routes($app);
+
+$displayErrorDetails = $container->get('settings')['displayErrorDetails'];
+
+$serverRequestCreator = ServerRequestCreatorFactory::create();
+$request = $serverRequestCreator->createServerRequestFromGlobals();
+
+// $responseFactory = $app->getResponseFactory();
+// $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
+
+$app->addRoutingMiddleware();
+
+$errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);
+// $errorMiddleware->setDefaultErrorHandler($errorHandler);
+
+$response = $app->handle($request);
+$responseEmitter = new ResponseEmitter();
+$responseEmitter->emit($response);
