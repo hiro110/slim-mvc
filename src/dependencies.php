@@ -19,6 +19,7 @@ return function (ContainerBuilder $containerBuilder) {
             $twig = Twig::create(__DIR__ . '/../templates');
             $env = $twig->getEnvironment();
             $env->addGlobal('session', $_SESSION);
+            $env->addGlobal('URL_TOP', $_ENV['URL_TOP']);
             return $twig;
         },
         'logger' => function (ContainerInterface $c) {
@@ -35,9 +36,6 @@ return function (ContainerBuilder $containerBuilder) {
             $settings = $c->get('settings');
             $dbsettings = $settings['db'];
 
-            // $dsn = 'mysql:host=' . getenv('DB_HOST') . ';dbname=' . getenv('DB_NAME') . ';charset=UTF8';
-            // $db_user = getenv('DB_USER');
-            // $db_pass = getenv('DB_PASSWORD');
             $dsn = 'mysql:host=' . $dbsettings['host'] . ';dbname=' . $dbsettings['schema'] . ';charset=UTF8';
             $db_user = $dbsettings['user'];
             $db_pass = $dbsettings['pass'];

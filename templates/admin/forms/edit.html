@@ -4,11 +4,18 @@
 
 <div style="width: 1500px; margin:0 auto; padding: 10px;">
   <form method="POST">
-    <div class="">
+    <div class="form_group">
       <label for="group_name">フォーム名</label>
       <input type="text" id="group_name" name="group_name" placeholder="username" required value="{% if form_group.name %}{{ form_group.name }}{% endif %}">
       <label for="group_uri">フォームURL</label>
       <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.uri %}{{ form_group.uri }}{% endif %}">
+      <a href="{{ UR_TOP }}/form/{{ form_group.uri }}" target="_blank" rel="noopener noreferrer">Display Site</a>
+      <label for="group_uri">公開開始日</label>
+      <input type="text" id="group_uri" name="group_uri" placeholder="username" required
+        value="{% if form_group.publishingstart %}{{ form_group.publishingstart }}{% endif %}">
+        <label for="group_uri">公開終了日</label>
+        <input type="text" id="group_uri" name="group_uri" placeholder="username" required
+          value="{% if form_group.publishingend %}{{ form_group.publishingend }}{% endif %}">
     </div>
 
     <table class="table is-striped is-hoverable is-fullwidth">
@@ -59,7 +66,6 @@
               {% if form_item.isrequired %}checked="checked" {% endif %}></td>
           <td><input type="text" id="placeholder"" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
-          <!-- <td><input type="text" id="validate" name="validate[0]" placeholder="ex) email /^\S+@\S+\.\S+$/" value="{# form_item.validate #}"></td> -->
           <td>
               <select id="validate" name="validate[0]">
                   {% for key, value in valid_types %}
@@ -121,9 +127,6 @@
     tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + cloneno2);
     clonecode.find('textarea#choice_value').attr('name', tmp);
 
-    // tmp = clonecode.find('input#validate').attr('name');
-    // tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + cloneno2);
-    // clonecode.find('input#validate').attr('name', tmp);
     tmp = clonecode.find('select#validate').attr('name');
     tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + cloneno2);
     clonecode.find('select#validate').attr('name', tmp);
@@ -136,7 +139,7 @@
 
     var scount = 0;
     $('.row').each(function () {
-      var scount2 = scount + 1;
+      // var scount2 = scount + 1;
 
       $(this).attr('data-formno', scount);
       // $('.no', this).html(scount2);
@@ -165,9 +168,6 @@
       tmp = tmp.replace(/choice_value\[[0-9]{1,2}/g, 'choice_value[' + scount);
       $('textarea#choice_value', this).attr('name', tmp);
 
-      // tmp = $('input#validate', this).attr('name');
-      // tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + scount);
-      // $('input#validate', this).attr('name', tmp);
       tmp = $('select#validate', this).attr('name');
       tmp = tmp.replace(/validate\[[0-9]{1,2}/g, 'validate[' + scount);
       $('select#validate', this).attr('name', tmp);
