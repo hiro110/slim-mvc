@@ -11,10 +11,10 @@
       <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.uri %}{{ form_group.uri }}{% endif %}">
       <a href="{{ UR_TOP }}/form/{{ form_group.uri }}" target="_blank" rel="noopener noreferrer">Display Site</a>
       <label for="group_uri">公開開始日</label>
-      <input type="text" id="group_uri" name="group_uri" placeholder="username" required
+      <input type="date" id="group_uri" name="group_uri" placeholder="username" required
         value="{% if form_group.publishingstart %}{{ form_group.publishingstart }}{% endif %}">
         <label for="group_uri">公開終了日</label>
-        <input type="text" id="group_uri" name="group_uri" placeholder="username" required
+        <input type="date" id="group_uri" name="group_uri" placeholder="username" required
           value="{% if form_group.publishingend %}{{ form_group.publishingend }}{% endif %}">
     </div>
 
@@ -64,7 +64,7 @@
             </select></td>
           <td><input type="checkbox" id="is_required" name="is_required[0]" value="1"
               {% if form_item.isrequired %}checked="checked" {% endif %}></td>
-          <td><input type="text" id="placeholder"" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
+          <td><input type="text" id="placeholder" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
           <td>
               <select id="validate" name="validate[0]">
@@ -92,16 +92,13 @@
 {% endblock %}
 {% block js %}
 <script type="text/javascript">
-  // 追加
   $('.addformbox').click(function () {
     var clonecode = $('.row:last').clone(true);
 
     var cloneno = clonecode.attr('data-formno');
     var cloneno2 = parseInt(cloneno) + 1;
-    // var cloneno3 = parseInt(cloneno) + 2;
 
     clonecode.attr('data-formno', cloneno2);
-    // clonecode.find('.no').html(cloneno3);
 
     var tmp = clonecode.find('input#label_name').attr('name');
     tmp = tmp.replace(/label_name\[[0-9]{1,2}/g, 'label_name[' + cloneno2);
@@ -139,10 +136,8 @@
 
     var scount = 0;
     $('.row').each(function () {
-      // var scount2 = scount + 1;
 
       $(this).attr('data-formno', scount);
-      // $('.no', this).html(scount2);
 
       var tmp = $('input#label_name', this).attr('name');
       tmp = tmp.replace(/label_name\[[0-9]{1,2}/g, 'label_name[' + scount);
