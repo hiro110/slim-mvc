@@ -18,8 +18,11 @@ class CheckedUriMiddleware implements MiddlewareInterface
         $uri = $routeContext->getRoute()->getArgument('uri');
         $msg = "";
 
+        $now = date("Y-m-d H:i:s");
         $fg = FormGroup::where('base_uri', $uri)
                 ->where('is_active', 1)
+                ->where('publishing_start', '<=', $now)
+                ->where('publishing_end', '>=', $now)
                 ->first();
 
         if($fg){
