@@ -10,12 +10,10 @@
       <label for="group_uri">フォームURL</label>
       <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.uri %}{{ form_group.uri }}{% endif %}">
       <a href="{{ UR_TOP }}/form/{{ form_group.uri }}" target="_blank" rel="noopener noreferrer">Display Site</a>
-      <label for="group_uri">公開開始日</label>
-      <input type="date" id="group_uri" name="group_uri" placeholder="username" required
-        value="{% if form_group.publishingstart %}{{ form_group.publishingstart }}{% endif %}">
-        <label for="group_uri">公開終了日</label>
-        <input type="date" id="group_uri" name="group_uri" placeholder="username" required
-          value="{% if form_group.publishingend %}{{ form_group.publishingend }}{% endif %}">
+      <label for="publishing_start">公開開始日時</label>
+      <input type="datetime-local" id="publishing_start" name="publishing_start" required value="{% if form_group.publishingstart %}{{ form_group.publishingstart }}{% endif %}">
+        <label for="publishing_end">公開終了日時</label>
+        <input type="datetime-local" id="publishing_end" name="publishing_end" required value="{% if form_group.publishingend %}{{ form_group.publishingend }}{% endif %}">
     </div>
 
     <table class="table is-striped is-hoverable is-fullwidth">
@@ -41,7 +39,7 @@
             <option value="{{ key }}" {% if form_item.inputtype == key %}selected{% endif %}>{{ value }}</option>
             {% endfor %}
           </select></td>
-          <td><input type="text" id="placeholder"" name="placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
+          <td><input type="text" id="placeholder" name="placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
           <td><input type="checkbox" id="is_required" name="is_required[{{ loop.index0 }}]" value="1" {% if form_item.isrequired %}checked="checked" {% endif %}></td>
           <td><textarea id="choice_value" name="choice_value[{{ loop.index0 }}]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
           <td>
@@ -55,21 +53,20 @@
         </tr>
         {% else %}
         <tr class="row" data-formno="0">
-          <td><input type="text" id="label_name" name="label_name[0]" placeholder="名前" required value=""></td>
-          <td><input type="text" id="schema_name" name="schema_name[0]" placeholder="name" required value="{{ form_item.schemaname }}"></td>
+          <td><input type="text" id="label_name" name="label_name[0]" placeholder="名前" required></td>
+          <td><input type="text" id="schema_name" name="schema_name[0]" placeholder="name" required></td>
           <td><select id="input_type" name="input_type[0]">
               {% for key, value in itemtypes %}
-              <option value="{{ key }}" {% if form_item.inputtype == key %}selected{% endif %}>{{ value }}</option>
+              <option value="{{ key }}">{{ value }}</option>
               {% endfor %}
             </select></td>
-          <td><input type="checkbox" id="is_required" name="is_required[0]" value="1"
-              {% if form_item.isrequired %}checked="checked" {% endif %}></td>
-          <td><input type="text" id="placeholder" name=" placeholder[{{ loop.index0 }}]" value="{{ form_item.placeholder }}"></td>
-          <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20">{{ form_item.choicevalue }}</textarea></td>
+        <td><input type="text" id="placeholder" name=" placeholder[{{ loop.index0 }}]"></td>
+          <td><input type="checkbox" id="is_required" name="is_required[0]" value="1"></td>
+          <td><textarea id="choice_value" name="choice_value[0]" placeholder="改行して入力ください" rows="3" cols="20"></textarea></td>
           <td>
               <select id="validate" name="validate[0]">
                   {% for key, value in valid_types %}
-                  <option value="{{ key }}" {% if form_item.validate == key %}selected{% endif %}>{{ value }}</option>
+                  <option value="{{ key }}">{{ value }}</option>
                   {% endfor %}
               </select>
           </td>
