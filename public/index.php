@@ -5,6 +5,7 @@ use App\Application\ResponseEmitter\ResponseEmitter;
 use DI\ContainerBuilder;
 use Slim\Factory\AppFactory;
 use Slim\Factory\ServerRequestCreatorFactory;
+use App\Middlewares\SessionMiddleware;
 
 if (PHP_SAPI == 'cli-server') {
     $file = __DIR__ . $_SERVER['REQUEST_URI'];
@@ -23,7 +24,6 @@ if (is_readable($dot_env)) {
 
 $containerBuilder = new ContainerBuilder();
 
-session_start();
 $settings = require_once( __DIR__ . '/../src/settings.php');
 $settings($containerBuilder);
 
@@ -35,6 +35,7 @@ $container = $containerBuilder->build();
 AppFactory::setContainer($container);
 $app = AppFactory::create();
 $callableResolver = $app->getCallableResolver();
+$app->add(new SessionMiddleware);
 
 require_once( __DIR__ . '/../src/middleware.php');
 require_once( __DIR__ . '/../src/routes.php');

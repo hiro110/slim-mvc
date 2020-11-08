@@ -11,13 +11,6 @@ use App\Daos\Admin\UserDAO;
 
 class SessionMiddleware implements MiddlewareInterface
 {
-    // private $session;
-
-    // public function __construct(ContainerInterface $container)
-    // {
-    //   $this->container = $container;
-    // }
-
     public function process(Request $request, RequestHandler $handler): Response
     {
         session_start();

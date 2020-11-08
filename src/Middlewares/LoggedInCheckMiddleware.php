@@ -7,7 +7,7 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 
-use App\Daos\Admin\UserDAO;
+use App\Models\User;
 
 class LoggedInCheckMiddleware implements MiddlewareInterface
 {
@@ -25,9 +25,9 @@ class LoggedInCheckMiddleware implements MiddlewareInterface
             return $response->withHeader('Location', '/admin/login')->withStatus(302);
         }
 
-        $db = $this->container->get("db");
-        $userDao = new UserDAO($db);
-        $user = $userDao->findByPk($_SESSION['user']['id']);
+        $user = User::where('id', $_SESSION['user']['id'])
+                        ->where('is_active', 1)
+                        ->first();
 
         if($user){
             $response = $handler->handle($request);
