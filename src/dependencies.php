@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use PDO;
 use DI\ContainerBuilder;
 // use DI\Container;
 use Slim\Factory\AppFactory;
@@ -12,6 +11,21 @@ use Monolog\Handler\StreamHandler;
 use Slim\Csrf\Guard;
 use Psr\Container\ContainerInterface;
 
+use Illuminate\Database\Capsule\Manager as Capsule;
+
+$capsule = new Capsule;
+$capsule->addConnection([
+    'driver'    => 'mysql',
+    'host'      => $_ENV['DB_HOST'],
+    'database'  => $_ENV['DB_SCHEMA'],
+    'username'  => $_ENV['DB_USER'],
+    'password'  => $_ENV['DB_PASS'],
+    'charset'   => 'utf8',
+    'collation' => 'utf8_unicode_ci',
+    'prefix'    => '',
+]);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
 
 return function (ContainerBuilder $containerBuilder) {
     $containerBuilder->addDefinitions([
@@ -32,20 +46,8 @@ return function (ContainerBuilder $containerBuilder) {
             $guard = new Guard;
             return $guard;
         },
-        'db' => function (ContainerInterface $c) {
-            $settings = $c->get('settings');
-            $dbsettings = $settings['db'];
-
-            $dsn = 'mysql:host=' . $dbsettings['host'] . ';dbname=' . $dbsettings['schema'] . ';charset=UTF8';
-            $db_user = $dbsettings['user'];
-            $db_pass = $dbsettings['pass'];
-
-            $pdo = new PDO($dsn, $db_user, $db_pass);
-            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-            $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-            return $pdo;
+        'db' => function () use ($capsule) {
+            return $capsule;
         }
     ]);
 };

@@ -38,8 +38,6 @@ $callableResolver = $app->getCallableResolver();
 
 require_once( __DIR__ . '/../src/middleware.php');
 require_once( __DIR__ . '/../src/routes.php');
-// $routes = require_once( __DIR__ . '/../src/routes.php');
-// $routes($app);
 
 $displayErrorDetails = $container->get('settings')['displayErrorDetails'];
 
@@ -48,7 +46,6 @@ $request = $serverRequestCreator->createServerRequestFromGlobals();
 
 // $responseFactory = $app->getResponseFactory();
 // $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
-
 $app->addRoutingMiddleware();
 
 $errorMiddleware = $app->addErrorMiddleware($displayErrorDetails, true, true);

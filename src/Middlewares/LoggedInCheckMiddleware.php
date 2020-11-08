@@ -15,7 +15,7 @@ class LoggedInCheckMiddleware implements MiddlewareInterface
 
     public function __construct(ContainerInterface $container)
     {
-      $this->container = $container;
+        $this->container = $container;
     }
 
     public function process(Request $request, RequestHandler $handler): Response
