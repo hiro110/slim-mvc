@@ -5,15 +5,17 @@
 <div style="width: 1500px; margin:0 auto; padding: 10px;">
   <form method="POST">
     <div class="form_group">
-      <label for="group_name">フォーム名</label>
-      <input type="text" id="group_name" name="group_name" placeholder="username" required value="{% if form_group.name %}{{ form_group.name }}{% endif %}">
-      <label for="group_uri">フォームURL</label>
-      <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.uri %}{{ form_group.uri }}{% endif %}">
-      <a href="{{ UR_TOP }}/form/{{ form_group.uri }}" target="_blank" rel="noopener noreferrer">Display Site</a>
-      <label for="publishing_start">公開開始日時</label>
-      <input type="datetime-local" id="publishing_start" name="publishing_start" required value="{% if form_group.publishingstart %}{{ form_group.publishingstart }}{% endif %}">
+        <label for="group_name">フォーム名</label>
+        <input type="text" id="group_name" name="group_name" placeholder="username" required value="{% if form_group.name %}{{ form_group.name }}{% endif %}">
+        <label for="group_uri">フォームURL</label>
+        <input type="text" id="group_uri"  name="group_uri" placeholder="username" required value="{% if form_group.base_uri %}{{ form_group.base_uri }}{% endif %}">
+        {% if form_group %}
+        <a href="{{ UR_TOP }}/form/{{ form_group.base_uri }}" target="_blank" rel="noopener noreferrer">Display Site</a>
+        {% endif %}
+        <label for="publishing_start">公開開始日時</label>
+        <input type="datetime-local" id="publishing_start" name="publishing_start" required value="{% if form_group.publishing_start %}{{ form_group.publishing_start|date('Y-m-d\\TH:i:s') }}{% endif %}">
         <label for="publishing_end">公開終了日時</label>
-        <input type="datetime-local" id="publishing_end" name="publishing_end" required value="{% if form_group.publishingend %}{{ form_group.publishingend }}{% endif %}">
+        <input type="datetime-local" id="publishing_end" name="publishing_end" required value="{% if form_group.publishing_end %}{{ form_group.publishing_end|date('Y-m-d\\TH:i:s') }}{% endif %}">
     </div>
 
     <table class="table is-striped is-hoverable is-fullwidth">
