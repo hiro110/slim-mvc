@@ -10,7 +10,7 @@ use Slim\Exception\NotFoundException;
 use \Illuminate\Database\Capsule\Manager as DB;
 
 use App\Entities\Admin;
-use App\Daos\Admin\FormDAO;
+// use App\Daos\Admin\FormDAO;
 
 use App\Controllers\Controller;
 
@@ -19,16 +19,6 @@ use App\Models\FormItem;
 
 class FormManageController extends Controller
 {
-	// 	private $view;
-	// 	private $db;
-
-	// // コンストラクタ
-	// public function __construct(ContainerInterface $container)
-	// {
-	// 			$this->view = $container->get("view");
-	// 			$this->db = $container->get("db");
-	// }
-
     public function getforms(Request $request, Response $response, array $args): Response
     {
         try {
@@ -169,56 +159,47 @@ class FormManageController extends Controller
         }
 
         $params = $request->getParsedBody();
-        file_put_contents('/var/www/test3/logs/app.log', $params["group_name"] . '\n', FILE_APPEND);
-        $form_group =[
-            'id' => $fg_id,
-            'name' => isset($params["group_name"]) ? $params["group_name"]: '',
-            'base_uri' => isset($params["group_name"]) ? $params["group_name"]: '',
-        ];
 
-        $form_items = [];
-        for($i = 0; $i < count($params["label_name"]); $i++) {
-            $form_items[] = [
-                'label_name' => isset($params["label_name"][$i]) ? $params["label_name"][$i]: '',
-                'schema_name' => isset($params["schema_name"][$i]) ? $params["schema_name"][$i]: '',
-                'input_type' => isset($params["input_type"][$i]) ? $params["input_type"][$i]: '',
-                'placeholder' => isset($params["placeholder"][$i]) ? $params["placeholder"][$i]: '',
-                'is_required' => (intVal($params["is_required"][$i]) == 1) ? 1: 0,
-                'choice_value' => isset($params["choice_value"][$i]) ? $params["choice_value"][$i] : '',
-                'validate' => isset($params["validate"][$i]) ? $params["validate"][$i]: '',
-            ];
-        }
+        $name = isset($params["group_name"]) ? $params["group_name"]: '';
+        $base_uri = isset($params["group_uri"]) ? $params["group_uri"]: '';
+        $publishing_start = isset($params["publishing_start"]) ? date('Y-m-d H:i:s', strtotime($params["publishing_start"])): date("Y-m-d H:i:s");
+        $publishing_end = isset($params["publishing_end"]) ? date('Y-m-d H:i:s', strtotime($params["publishing_end"])): date("Y-m-d H:i:s");
 
 
         try {
-            // $formDao = new FormDAO($this->db);
-            // $res = $formDao->updateForm($form_group, $form_items);
+            $con = DB::connection();
+            $con->beginTransaction();
 
-            // if (!$res) {
-            //         $msg = "Failed update form";
-            // }
+            // 更新
             $update_res = FormGroup::where('id', $fg_id)
                     ->update([
-                            'name' => $form_group['name'],
-                            'base_uri' => $form_group['base_uri'],
-                            'is_active' => 1
+                            'name' => $name,
+                            'base_uri' => $base_uri,
+                            'is_active' => 1,
+                            'publishing_start' => $publishing_start,
+                            'publishing_end' => $publishing_end
                     ]);
-
             $del_res = FormItem::where('form_group_id', $fg_id)->delete();
 
+            $form_items = [];
+            for($i = 0; $i < count($params["label_name"]); $i++) {
+                $form_items[] = [
+                    'label_name' => isset($params["label_name"][$i]) ? $params["label_name"][$i]: '',
+                    'schema_name' => isset($params["schema_name"][$i]) ? $params["schema_name"][$i]: '',
+                    'input_type' => isset($params["input_type"][$i]) ? $params["input_type"][$i]: '',
+                    'placeholder' => isset($params["placeholder"][$i]) ? $params["placeholder"][$i]: '',
+                    'is_required' => intVal($params["is_required"][$i]) == 1 ? 1: 0,
+                    'choice_value' => isset($params["choice_value"][$i]) ? $params["choice_value"][$i] : '',
+                    'validate' => isset($params["validate"][$i]) ? $params["validate"][$i]: '',
+                ];
+            }
+
+            $data = [];
             foreach ($form_items as $form_item) {
-
                 file_put_contents('/var/www/test3/logs/app.log', $form_item['label_name'] . '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', $form_item['label_name']. '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', $form_item['schema_name']. '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', intVal($form_item['input_type']). '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', $form_item['placeholder']. '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', intVal($form_item['is_required']). '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', $form_item['choice_value']. '\n', FILE_APPEND);
-                // file_put_contents('/var/www/test3/logs/app.log', $form_item['validate']. '\n', FILE_APPEND);
-
-                $form_item = FormItem::create([
-                    'form_group_id' => $fid,
+                file_put_contents('/var/www/test3/logs/app.log', $form_item['schema_name'] . '\n', FILE_APPEND);
+                $data[] = [
+                    'form_group_id' => $fg_id,
                     'label_name' => $form_item['label_name'],
                     'schema_name' => $form_item['schema_name'],
                     'input_type' => intVal($form_item['input_type']),
@@ -226,24 +207,17 @@ class FormManageController extends Controller
                     'is_required' => intVal($form_item['is_required']),
                     'choice_value' => $form_item['choice_value'],
                     'validate' => $form_item['validate']
-                ]);
+                ];
             }
+            $fi = DB::table('form_items')
+                ->insert($data);
 
-
+            $con->commit();
         } catch(PDOException $ex) {
+            $con->rollBack();
             var_dump($ex->getMessage());
         }
+        var_dump($params);
         return $response->withHeader('Location', '/admin/forms')->withStatus(302);
-
-        // $response = $this->view->render($response, "admin/forms/edit.html",
-        // 						[
-        // 							'user' => [
-        // 								'username' => $username,
-        // 								'role' => $role,
-        // 							],
-        // 							'msg' => $msg,
-        // 							'roles' => UserDAO::ROLES
-        // 						]);
-        // return $response;
     }
 }
