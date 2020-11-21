@@ -28,7 +28,7 @@
         {% elseif form_item.inputtype == 7 %}
           <label class="label checkbox" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
           {% for key, value in form_item.choicevalue %}
-          <input type="checkbox" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}" value="{{ value }}">{{ value }}
+          <input type="checkbox" id="{{ form_item.schemaname }}" name="{{ form_item.schemaname }}[]" value="{{ value }}">{{ value }}
           {% endfor %}
         {% elseif form_item.inputtype == 8 %}
         <label class="label" for="{{ form_item.schemaname }}">{{ form_item.labelname }}</label>
