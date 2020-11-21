@@ -7,7 +7,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
-use App\Entities\Admin;
+// use App\Entities\Admin;
 
 use App\Models\User;
 

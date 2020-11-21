@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 use Psr\Container\ContainerInterface;
 
-class Controller
+class BaseController
 {
     protected $view;
     protected $db;

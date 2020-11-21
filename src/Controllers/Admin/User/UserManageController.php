@@ -8,11 +8,11 @@ use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use \Illuminate\Database\Capsule\Manager as DB;
 
-use App\Controllers\Controller;
+use App\Controllers\BaseController;
 
 use App\Models\User;
 
-class UserManageController extends Controller
+class UserManageController extends BaseController
 {
     public function getUsers(Request $request, Response $response, array $args): Response
     {

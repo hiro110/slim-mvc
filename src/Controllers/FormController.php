@@ -6,25 +6,17 @@ use PDOException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
+use \Illuminate\Database\Capsule\Manager as DB;
+
+use App\Controllers\BaseController;
 
 use App\Models\FormItem;
 use App\Models\FormGroup;
 use App\Models\Submit;
 use App\Models\SubmitValue;
 
-class FormController
+class FormController extends BaseController
 {
-    private $view;
-    private $db;
-    private $logger;
-
-    public function __construct(ContainerInterface $container)
-    {
-            $this->view = $container->get("view");
-            $this->db = $container->get("db");
-            // $this->logger = $container->get("logger");
-    }
-
     public function getIndex(Request $request, Response $response, array $args): Response
     {
         $response = $this->view->render($response, "form/index.html");
@@ -62,8 +54,6 @@ class FormController
 
         } catch(PDOException $ex) {
             var_dump($ex->getMessage());
-        } finally {
-            $this->db = null;
         }
 
         $response = $this->view->render($response,
@@ -94,27 +84,24 @@ class FormController
 
             $items = [];
             foreach ($tmps as $tmp) {
-                    $items[] = [
-                        'id' => $tmp->id,
-                        'labelname' => $tmp->label_name,
-                        'schemaname' => $tmp->schema_name,
-                    ];
-
-                    $_SESSION['form'][$tmp->schema_name] = $params[$tmp->schema_name];
+                $items[] = [
+                    'id' => $tmp->id,
+                    'labelname' => $tmp->label_name,
+                    'schemaname' => $tmp->schema_name,
+                    'value' => gettype($params[$tmp->schema_name]) == 'array' ? implode(',', $params[$tmp->schema_name]): $params[$tmp->schema_name],
+                ];
             }
         } catch(PDOException $ex) {
             var_dump($ex->getMessage());
-        } finally {
-            $this->db = null;
         }
 
         $response = $this->view->render($response,
-                    "form/confirm.html",
-                    [
-                        'uri' => $uri,
-                        'form_items' => $items,
-                        'msg' => $msg,
-                    ]);
+                "form/confirm.html",
+                [
+                    'uri' => $uri,
+                    'form_items' => $items,
+                    'msg' => $msg,
+                ]);
         return $response;
     }
 
@@ -123,17 +110,17 @@ class FormController
         $uri = $args['uri'];
         $params = $request->getParsedBody();
 
-        DB::beginTransaction();
         try {
+            $con = DB::connection();
+            $con->beginTransaction();
+
             $fg = $request->getAttribute('form_group');
 
-            // $submitDao = new SubmitDAO($this->db);
-            // $res = $submitDao->addSubmit($fg->id, $params);
-
-            $id = DB::table('submits')->insertGetId([
-                'form_group_id' => $fg->id,
-                'is_active' => 1
-            ]);
+            $id = DB::table('submits')
+                ->insertGetId([
+                    'form_group_id' => $fg->id,
+                    'is_active' => 1
+                ]);
 
             $vals = [];
             foreach ($params as $key => $value) {
@@ -147,6 +134,7 @@ class FormController
                             'num' => 0,
                             'datetime' => null,
                         ];
+                        break;
 
                     case 'integer':
                         $vals[] = [
@@ -157,47 +145,23 @@ class FormController
                             'num' => $value,
                             'datetime' => null,
                         ];
+                        break;
 
                     default:
                         break;
                 }
             }
 
-            $res = DB::table('submit_values')->insert([
-                $vals
-            ]);
-            DB::commit();
+            $res = DB::table('submit_values')
+                ->insert($vals);
+            $con->commit();
 
         } catch(PDOException $ex) {
             var_dump($ex->getMessage());
-            DB::rollback();
+            $con->rollBack();
         }
 
-        unset($_SESSION['form']);
         $response = $this->view->render($response, "form/complete.html");
-        return $response;
-    }
-
-    public function getTest(Request $request, Response $response, array $args): Response
-    {
-        $fg = FormGroup::where('base_uri', 'test1')
-                ->where('is_active', 1)
-                ->first();
-        if (!$fg) {
-            $msg = "Not found form";
-            return $response->withHeader('Location', '/')->withStatus(302);
-        }
-        var_dump($fg);
-
-        $tmps = FormItem::where('form_group_id', $fg->id)
-            ->get();
-        if (!$tmps) {
-            $msg = "Not found form items";
-        }
-
-        var_dump($tmps);
-        $response = $this->view->render($response, "form/test.html", ["user" => $fg->items()]);
-
         return $response;
     }
 }

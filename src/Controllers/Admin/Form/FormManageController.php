@@ -1,7 +1,6 @@
 <?php
 namespace App\Controllers\Admin\Form;
 
-// use PDO;
 use PDOException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -9,12 +8,12 @@ use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use \Illuminate\Database\Capsule\Manager as DB;
 
-use App\Controllers\Controller;
+use App\Controllers\BaseController;
 
 use App\Models\FormGroup;
 use App\Models\FormItem;
 
-class FormManageController extends Controller
+class FormManageController extends BaseController
 {
     public function getforms(Request $request, Response $response, array $args): Response
     {
@@ -162,12 +161,10 @@ class FormManageController extends Controller
         $publishing_start = isset($params["publishing_start"]) ? date('Y-m-d H:i:s', strtotime($params["publishing_start"])): date("Y-m-d H:i:s");
         $publishing_end = isset($params["publishing_end"]) ? date('Y-m-d H:i:s', strtotime($params["publishing_end"])): date("Y-m-d H:i:s");
 
-
         try {
             $con = DB::connection();
             $con->beginTransaction();
 
-            // 更新
             $update_res = FormGroup::where('id', $fg_id)
                     ->update([
                             'name' => $name,
@@ -193,8 +190,6 @@ class FormManageController extends Controller
 
             $data = [];
             foreach ($form_items as $form_item) {
-                file_put_contents('/var/www/test3/logs/app.log', $form_item['label_name'] . '\n', FILE_APPEND);
-                file_put_contents('/var/www/test3/logs/app.log', $form_item['schema_name'] . '\n', FILE_APPEND);
                 $data[] = [
                     'form_group_id' => $fg_id,
                     'label_name' => $form_item['label_name'],
