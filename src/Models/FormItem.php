@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class FormItem extends Model
 {
     protected $table = 'form_items';
-    protected $guarded = ['id'];
+    protected $guarded = ['id', 'created_at', 'updated_at'];
 
     public const ITEM_TYPE = ['テキスト', 'テキストエリア', '電話番号', 'Eメール', 'パスワード', 'セレクトボックス', 'ラジオボタン', 'チェックボックス', '日付'];
     public const VALIDATE_TYPE = [
@@ -25,6 +25,4 @@ class FormItem extends Model
         '^[0-9０-９]+$' => '全て数値（全角,半角）',
         '^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6011[0-9]{12}|3(?:0[0-5]|[68][0-9])[0-9]{11}|3[47][0-9]{13})$' => 'クレジットカード'
     ];
-
-
 }

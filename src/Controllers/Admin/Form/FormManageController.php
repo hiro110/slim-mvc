@@ -1,16 +1,13 @@
 <?php
 namespace App\Controllers\Admin\Form;
 
-use PDO;
+// use PDO;
 use PDOException;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
 use Slim\Exception\NotFoundException;
 use \Illuminate\Database\Capsule\Manager as DB;
-
-use App\Entities\Admin;
-// use App\Daos\Admin\FormDAO;
 
 use App\Controllers\Controller;
 
