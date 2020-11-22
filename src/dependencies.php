@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use DI\ContainerBuilder;
-// use DI\Container;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Monolog\Logger;

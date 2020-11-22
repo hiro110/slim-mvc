@@ -6,7 +6,6 @@ use App\Controllers\Admin\Form\FormManageController;
 use App\Middlewares\LoggedInCheckMiddleware;
 use App\Middlewares\CheckedUriMiddleware;
 
-// use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 use Psr\Container\ContainerInterface;
 
@@ -15,7 +14,6 @@ $app->get('/', FormController::class.":getIndex");
 $app->get("/form/{uri}[/]", FormController::class.":getForm")->add(new CheckedUriMiddleware());
 $app->map(["GET","POST"], "/form/{uri}/confirm[/]", FormController::class.":postConfirm")->add(new CheckedUriMiddleware());
 $app->map(["GET","POST"], "/form/{uri}/complete[/]", FormController::class.":postComplete")->add(new CheckedUriMiddleware());
-// $app->get("/test[/]", FormController::class.":getTest");
 
 // 管理サイト
 $app->get("/admin[/]", AuthController::class.":getIndex")->add(new LoggedInCheckMiddleware($container));

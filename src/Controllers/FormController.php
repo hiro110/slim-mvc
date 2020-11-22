@@ -42,12 +42,12 @@ class FormController extends BaseController
             foreach ($tmps as $tmp) {
                 $items[] = [
                     'id' => $tmp->id,
-                    'labelname' => $tmp->label_name,
-                    'schemaname' => $tmp->schema_name,
-                    'inputtype' => $tmp->input_type,
+                    'label_name' => $tmp->label_name,
+                    'schema_name' => $tmp->schema_name,
+                    'input_type' => $tmp->input_type,
                     'placeholder' => $tmp->placeholder,
-                    'isrequired' => $tmp->is_required,
-                    'choicevalue' => explode("\n", str_replace(array("\r\n","\r","\n"), "\n", $tmp->choice_value)),
+                    'is_required' => $tmp->is_required,
+                    'choice_value' => explode("\n", str_replace(array("\r\n","\r","\n"), "\n", $tmp->choice_value)),
                     'validate' => $tmp->validate,
                 ];
             }

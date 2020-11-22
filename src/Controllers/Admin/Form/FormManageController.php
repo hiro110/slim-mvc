@@ -130,12 +130,12 @@ class FormManageController extends BaseController
                 foreach ($tmps as $tmp) {
                    $items[] = [
                        'id' => $tmp->id,
-                       'labelname' => $tmp->label_name,
-                       'schemaname' => $tmp->schema_name,
-                       'inputtype' => intVal($tmp->input_type),
+                       'label_name' => $tmp->label_name,
+                       'schema_name' => $tmp->schema_name,
+                       'input_type' => intVal($tmp->input_type),
                        'placeholder' => $tmp->placeholder,
-                       'isrequired' => intVal($tmp->is_required) == 1,
-                       'choicevalue' => $tmp->choice_value,
+                       'is_required' => intVal($tmp->is_required) == 1,
+                       'choice_value' => $tmp->choice_value,
                        'validate' => $tmp->validate,
                    ];
                 }
@@ -148,7 +148,7 @@ class FormManageController extends BaseController
                             'form_group' => $group,
                             'form_items' => $items,
                             'msg' => $msg,
-                            'itemtypes' => FormItem::ITEM_TYPE,
+                            'item_types' => FormItem::ITEM_TYPE,
                             'valid_types' => FormItem::VALIDATE_TYPE,
                         ]);
             return $response;

@@ -3,32 +3,27 @@ namespace App\Controllers;
 
 use PDO;
 use PDOException;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Container\ContainerInterface;
+use \Illuminate\Database\Capsule\Manager as DB;
 
-class SampleController
+use App\Controllers\BaseController;
+
+class SampleController extends BaseController
 {
-		private $container;
 
-	// コンストラクタ
-	public function __construct(ContainerInterface $container)
-	{
-			$this->container = $container;
-	}
-
-    public function mapIndex(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function mapIndex(Request $request, Response $response, array $args): Response
     {
-			$twig = $this->container->get("view");
-			$response = $twig->render($response, "sample/index.html");
-			return $response;
+        $response = $this->view->render($response, "sample/index.html");
+        return $response;
     }
 
-    public function mapHello(ServerRequestInterface $request, ResponseInterface $response, array $args): ResponseInterface
+    public function mapHello(Request $request, Response $response, array $args): Response
     {
-			$content = "HelloWorld!";
-			$responseBody = $response->getBody();
-			$responseBody->write($content);
-			return $response;
+        $content = "HelloWorld!";
+        $responseBody = $response->getBody();
+        $responseBody->write($content);
+        return $response;
     }
 }
