@@ -24,6 +24,7 @@ $app->map(["GET", "POST"], "/admin/users/{id}", UserManageController::class.":ma
 $app->get("/admin/forms", FormManageController::class.":getForms")->add(new LoggedInCheckMiddleware($container));
 $app->map(["GET", "POST"],"/admin/forms/add", FormManageController::class.":mapFormsAdd")->add(new LoggedInCheckMiddleware($container));
 $app->map(["GET", "POST"], "/admin/forms/{id}", FormManageController::class.":mapFormsId")->add(new LoggedInCheckMiddleware($container));
+$app->get("/admin/forms/{id}/items", FormManageController::class.":getFormsItems")->add(new LoggedInCheckMiddleware($container));
 
 $app->map(['GET','POST'], '/admin/login', AuthController::class.':mapLogin');
 $app->get( '/admin/logout', AuthController::class.':getLogout');

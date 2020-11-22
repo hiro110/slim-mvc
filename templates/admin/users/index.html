@@ -12,7 +12,7 @@
       <tr>
         <td>{{ user.id }}</td>
         <td>{{ user.username }}</td>
-        <td>{{ user.role }}</td>
+        <td>{{ attribute(roles, user.role) }}</td>
         <td><a href="/admin/users/{{ user.id }}" alt="edit">編集</a></td>
       </tr>
       {% endfor %}

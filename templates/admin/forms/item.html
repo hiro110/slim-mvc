@@ -1,0 +1,23 @@
+{% extends './base.html' %}
+{% block title %}Entry List{% endblock %}
+
+{% block content %}
+<div style="width: 1200px; margin:0 auto; padding: 10px;">
+    <table class="table is-striped is-hoverable is-fullwidth">
+        <th>id</th>
+        {% for form_item in form_items %}
+        <th>{{ form_item.label_name }}</th>
+        {% endfor %}
+        {% for item in items %}
+        <tr>
+            {% for key, value in item %}
+            <td>{{ attribute(item, key) }}</td>
+            {% endfor %}
+        {% endfor %}
+    </table>
+    <div class="field is-grouped">
+        <div class="mx-2"></div>
+        <a class="button is-link" href="/admin/forms" alt="logout">戻る</a>
+    </div>
+</div>
+{% endblock %}

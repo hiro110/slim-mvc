@@ -8,12 +8,14 @@
         <th>name</th>
         <th>uri</th>
         <th>edit</th>
+        <th>entries</th>
         {% for form in forms %}
         <tr>
             <td>{{ form.id }}</td>
             <td>{{ form.name }}</td>
             <td>{{ form.base_uri }}</td>
             <td><a href="/admin/forms/{{ form.id }}" alt="edit">編集</a></td>
+            <td><a href="/admin/forms/{{ form.id }}/items" alt="edit">登録状況</a></td>
         </tr>
         {% endfor %}
     </table>

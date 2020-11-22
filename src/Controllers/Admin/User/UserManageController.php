@@ -22,6 +22,7 @@ class UserManageController extends BaseController
                 "admin/users/index.html",
                 [
                     'users' => $users,
+                    'roles' => User::ROLES,
                     'session_role' => $_SESSION['user']['role']
                 ]);
         return $response;
@@ -47,8 +48,8 @@ class UserManageController extends BaseController
             $response = $this->view->render($response,
                     "admin/users/edit.html",
                     [
-                            'msg' => $msg,
-                            'roles' => User::ROLES
+                        'msg' => $msg,
+                        'roles' => User::ROLES
                     ]);
             return $response;
         }

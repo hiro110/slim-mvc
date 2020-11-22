@@ -2,7 +2,6 @@ CREATE USER app3 IDENTIFIED BY '<password>';
 CREATE DATABASE app3 CHARACTER SET 'utf8' COLLATE 'utf8_general_ci';
 GRANT ALL ON app3.* TO 'app3' identified by '<password>';
 
-
 /*
   * 管理サイトユーザ
   * username:ユーザ名
@@ -74,31 +73,6 @@ CREATE TABLE `form_items` (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
-/*
-  * input type 詳細
-  * input_type_id:フォームのinput_typeに利用
-  * type:int, form_valuesの型に利用 ex)1=string, 2=num, 3=datetime, 4=boolean
-  * validate:バリデーション正規表現
-  正規表現はこちら
-  https://qiita.com/fubarworld2/items/9da655df4d6d69750c06
-*/
-
--- drop table `item_details`;
--- CREATE TABLE `item_details` (
---   `id` int AUTO_INCREMENT,
---   `input_type_id` int NOT NULL DEFAULT 0,
---   `type` int  NOT NULL DEFAULT 0,
---   `validate`
-
--- );
-
--- INSERT INTO `form_items` (`label_name`, `schema_name`, `input_type`, `type`, `required`, `only_int`, `choice_name`, `choice_value`, `format_with`) VALUES
--- ('名前', 'name', 'text', 1, false, false, '', '', ''),
--- ('メールアドレス', 'email', 'email', 1, false, false, '', '', '/^([a-zA-Z0-9])+([a-zA-Z0-9\._-])*@([a-zA-Z0-9_-])+([a-zA-Z0-9\._-]+)+$/'),
--- ('電話番号', 'tel', 'text', 2, false, true, '', '', '/^[0-9]+$/'),
--- ('性別', 'sex', 'radio', 1, false, false, '男性,女性', 'male,female', ''),
--- ('興味', 'interest', 'checkbox', 1, false, false, '技術、環境、経済', 'technology,environment,buissiness', ''),
--- ('備考', 'remarks', 'textarea', 1, false, false, '', '', '');
 
 CREATE TABLE `submits` (
   `id` int AUTO_INCREMENT,
@@ -119,6 +93,23 @@ CREATE TABLE `submit_values` (
   `string` text,
   `num` int NOT NULL DEFAULT 0,
   `datetime` timestamp null DEFAULT null,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id),
+  INDEX (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
+/*
+  * actions 操作ログ
+*/
+
+CREATE TABLE `actions` (
+  `id` int AUTO_INCREMENT,
+  `user` varchar(255) NOT NULL DEFAULT '',
+  `method` varchar(255) NOT NULL DEFAULT '',
+  `uri` varchar(255) NOT NULL DEFAULT '',
+  `action` varchar(255) NOT NULL DEFAULT '',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (id),

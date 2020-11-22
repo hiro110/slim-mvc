@@ -12,6 +12,8 @@ use App\Controllers\BaseController;
 
 use App\Models\FormGroup;
 use App\Models\FormItem;
+use App\Models\Submit;
+use App\Models\SubmitValue;
 
 class FormManageController extends BaseController
 {
@@ -25,14 +27,14 @@ class FormManageController extends BaseController
                 $msg = "Failed add form";
             }
         } catch(PDOException $ex) {
-                var_dump($ex->getMessage());
+            var_dump($ex->getMessage());
         }
 
         $response = $this->view->render($response,
-                    "admin/forms/index.html",
-                    [
-                        'forms' => $forms,
-                    ]);
+                "admin/forms/index.html",
+                [
+                    'forms' => $forms,
+                ]);
 
         return $response;
     }
@@ -42,8 +44,8 @@ class FormManageController extends BaseController
 
         if ($request->getMethod() == "GET") {
             $response = $this->view->render($response,
-                        "admin/forms/edit.html",
-                        ['itemtypes' => FormItem::ITEM_TYPE, 'valid_types' => FormItem::VALIDATE_TYPE,]);
+                    "admin/forms/edit.html",
+                    ['itemtypes' => FormItem::ITEM_TYPE, 'valid_types' => FormItem::VALIDATE_TYPE,]);
             return $response;
         }
         $msg = "";
@@ -102,7 +104,7 @@ class FormManageController extends BaseController
                     "admin/forms/edit.html",
                     [
                         'msg' => $msg,
-                        'itemtypes' => FormItem::ITEM_TYPE,
+                        'item_types' => FormItem::ITEM_TYPE,
                         'valid_types' => FormItem::VALIDATE_TYPE,
                     ]);
         return $response;
@@ -209,7 +211,52 @@ class FormManageController extends BaseController
             $con->rollBack();
             var_dump($ex->getMessage());
         }
-        var_dump($params);
+
         return $response->withHeader('Location', '/admin/forms')->withStatus(302);
+    }
+
+    public function getFormsItems(Request $request, Response $response, array $args): Response
+    {
+        $fg_id = intVal($args['id']);
+        try {
+            $form_items = FormItem::where('form_group_id', $fg_id)
+                ->select('label_name', 'schema_name')
+                ->get();
+
+            $submits = Submit::where('form_group_id', $fg_id)
+                ->where('is_active', 1)
+                ->get('id');
+            $submits = array_column(json_decode(json_encode($submits), true), 'id');
+
+            $items = [];
+            foreach ($submits as $submit) {
+                $vals = SubmitValue::where('submit_id', $submit)
+                    ->select('submit_id', 'schema_name', 'string', 'num', 'datetime')
+                    ->get();
+                $vals = json_decode(json_encode($vals), true);
+
+                $tmp = ['submit_id' => $submit];
+                foreach ($vals as $val) {
+                    $hoge = [
+                        $val['schema_name'] => $val['string'] != '' ? $val['string'] : $val['num']
+                    ];
+                    $tmp = array_merge($tmp, $hoge);
+                }
+
+                $items[] = $tmp;
+            }
+            // file_put_contents('/var/www/test3/logs/app.log', $items, FILE_APPEND);
+        } catch(PDOException $ex) {
+            var_dump($ex->getMessage());
+        }
+
+        $response = $this->view->render($response,
+                "admin/forms/item.html",
+                [
+                    'form_items' => $form_items,
+                    'items' => $items,
+                ]);
+
+        return $response;
     }
 }
